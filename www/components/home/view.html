@@ -1,0 +1,596 @@
+<div data-role="view" id="login" data-title="Medinet Mobile Billing - Login" data-layout="login" data-model="loginView">
+<!-- The debugger won't allow you to open this file, so put in a console.log("got here") statement
+	into the code where you want and then use it from the debugger console to open the code -->
+    <form>
+        <div style="height:40px">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="email" id="username" data-bind="value: username" placeholder="email" style="font-size:1.1em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="password" id="password" data-bind="value: password" placeholder="password" required="required" style="font-size:1.1em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="text" id="datacentre" data-bind="value: datacentre" placeholder="data centre" style="font-size:1.1em;width:100%">
+        </div>
+    </form>
+    <center><a href="#reset">Reset your password?</a>
+    </center>
+    <div style="height:10px">
+    </div>
+    <div id="progressbar" style="position:relative;left:10px;width:85%;height:30px;display:none">
+        <script>
+            $("#progressbar").kendoProgressBar({
+                min: 0,
+                max: 11,
+                value: 0,
+                showStatus: false,
+                complete: function () {
+                    $('#progressbar').fadeOut("fast");
+                    $('#progressbar').data('kendoProgressBar').value(0);
+                    app.mobileApp.navigate("#calendar");
+                }
+            });
+        </script>
+    </div>
+    <!-- END_CUSTOM_CODE_home -->
+</div>
+<div data-role="view" id="register" data-title="MMB - Register" data-layout="register" data-model="registerView">
+    <!-- START_CUSTOM_CODE_home -->
+    <form>
+        <div style="height:40px">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="text" id="regfirstname" data-bind="value: firstname" placeholder="first name" style="font-size:1.2em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="text" id="reglastname" data-bind="value: lastname" placeholder="last name" style="font-size:1.2em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="email" id="regemail" data-bind="value: email" placeholder="email" style="font-size:1.2em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="text" id="regdatacentre" data-bind="value: datacentre" placeholder="data centre" style="font-size:1.1em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="text" id="regcollegeId" data-bind="value: collegeId" placeholder="College ID" style="font-size:1.1em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            You will receive a registration confirmation email once your information has been verified.
+        </div>
+    </form>
+    <!-- END_CUSTOM_CODE_home -->
+</div>
+<div data-role="view" id="reset" data-title="MMB - Reset Password" data-layout="resetpw" data-model="pwChangeView">
+    <!-- START_CUSTOM_CODE_home -->
+    <form>
+        <div style="height:40px">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="email" id="rp_username" data-bind="value: username" placeholder="email" style="font-size:1.1em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="password" id="rp_password" data-bind="value: password" placeholder="new password" required="required" style="font-size:1.2em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="text" id="rp_datacentre" data-bind="value: datacentre" placeholder="data centre" style="font-size:1.1em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            <input type="text" id="rp_collegeId" data-bind="value: collegeId" placeholder="college ID" style="font-size:1.1em;width:100%">
+        </div>
+        <div style="height:40px;width:90%;padding-left:10px">
+            Enter in a new password that you want to use with this application
+        </div>
+    </form>
+    <!-- END_CUSTOM_CODE_home -->
+</div>
+<div id="calendar" data-role="view" data-title="MMB - Calendar" data-model="calendarView" data-layout="calendarLayout">
+    <div id="mainCalendar">
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#mainCalendar").kendoTreeView({
+                dataSource: app.calendarData,
+                autoBind: false,
+                dataTextField: ["date", "label"],
+                dataBound: function (e) {
+                    var pb = $("#progressbar").data("kendoProgressBar");
+                    var cur = pb.value() + 1;
+                    pb.value(cur);
+                },
+                navigate: function (e) { console.log("navigate");
+                                       },
+                select: function (e) {
+                    app.curEvent = this.dataSource.getByUid(e.node.dataset.uid).id;
+                    if (app.curEvent === undefined) {
+                        return;
+                    }
+                    if (this.dataSource.getByUid(e.node.dataset.uid).type == "paid") {
+                        app.encounterData.read();
+                        app.mobileApp.navigate("#encounter");
+                        $("#addenc").fadeOut("fast");
+                        $("#updenc").fadeIn("fast");
+				        var tabToActivate = $("#demogTab");			//reset the tab before we show the form
+        				$("#tabstrip").data("kendoTabStrip").activateTab(tabToActivate);
+                    } else if (this.dataSource.getByUid(e.node.dataset.uid).type == "unpaid") {
+                        app.activityData.read();
+                        app.mobileApp.navigate("#activityForm");
+                    } else {
+                        //expand the tree when they click on a date
+                        var treeview = $("#mainCalendar").data("kendoTreeView");
+                        treeview.expandPath([this.dataSource.getByUid(e.node.dataset.uid).date]);
+                    }
+                }
+            });
+        });
+    </script>
+</div>
+<div data-role="view" id="encounter" data-title="MMB - Claim" data-model="encounterView" data-layout="encounterLayout">
+    <!-- START_CUSTOM_CODE_home -->
+    <form>
+        <div>
+            <div style="height:20px">
+                <!-- needed to force the clinic doctor to show properly -->
+                &nbsp;
+            </div>
+            <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                <input type="text" id="clinicdoc" class="k-input k-textbox" required="required" data-bind="value: clinicDoctor" placeholder="Clinic Doc" style="font-size:1.1em;width:70%">
+                <button data-role="button" data-bind="click: findClinicDoc">
+                    <span class="k-icon k-i-search"></span>
+                </button>
+            </div>
+            <div id="tabstrip">
+                <ul>
+                    <li id="demogTab" class="k-state-active">Demographics</li>
+                    <li>Encounter</li>
+                </ul>
+                <div>
+                    <div style="height:20px;width:100%">
+                    </div>
+                    <div id="addenc">
+                        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                            <input id="provCode" data-bind="value: provCode">
+                            <script>
+                                $(document).ready(function () {
+                                    $("#provCode").kendoDropDownList({
+                                        autoBind: false,
+                                        valuePrimitive: false,
+                                        dataValueField: "code",
+                                        dataTextField: "description",
+                                        dataSource: app.provinces,
+                                        index: 1,
+                                        change: function () {
+                                            var dropdownlist = $("#provCode").data("kendoDropDownList");
+                                            var dataItem = dropdownlist.dataItem();
+
+                                            if (dataItem.label == "BC") { // If BC set other insurer to MSP if not already set
+                                                var ilist = $('#patientInsurer').data("kendoDropDownList");
+                                                if (ilist.select() == "") {
+                                                    ilist.search("MSP");
+                                                }
+                                            } else {
+                                                var ilist = $('#patientInsurer').data("kendoDropDownList");
+                                                //get rid of MSP if set
+                                                if (ilist.dataItem(ilist.selectedIndex).description == "MSP") {
+                                                    ilist.select(0);
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
+                        </div>
+                        <div>
+                            <div style="padding-left:10px;padding-bottom:10px;padding-right:20px;float:left">
+                                <input id="phn" name="phn" data-bind="value:phn" placeholder="PHN" />
+                                <script>
+                                    $(document).ready(function () {
+                                        $("#phn").kendoNumericTextBox({
+                                            format: "#############",
+                                            spinners: false,
+                                            decimals: 0,
+                                            optionLabel: "PHN",
+                                            autoBind: false,
+                                            change: function () {
+                                                numb = this.value();
+                                                if ((numb != null) && (numb.toString().length == 10)) {
+                                                    app.findPHN();
+                                                }
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div id="mic" onClick="app.sendVoice();">
+                                <img src="components/images/mic.png" width=24px height=24px>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="updenc">
+                        <div id="updprov" class="k-input k-textbox" style="width:90%;padding-left:10px;padding-bottom:10px;font-size:1.0em;">
+                            <input id="updprovtext" type="text" style="font-size:1.1em; width:100%" readonly>
+                        </div>
+                        <div id="updphn" class="k-input k-textbox" style="width:90%;padding-left:10px;padding-bottom:10px;font-size:1.0em;">
+                            <input id="updphntext" type="text" style="font-size:1.1em;width:100%" readonly>
+                        </div>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input type="text" id="lastname" class="k-textbox" data-bind="value: lastname" placeholder="Last name" style="font-size:1.1em;width:100%">
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input type="text" id="firstname" class="k-textbox" data-bind="value: firstname" placeholder="First name" style="font-size:1.1em;width:100%">
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input type="text" id="initials" class="k-textbox" data-bind="value: initials" placeholder="Initials" style="font-size:1.1em;width:100%">
+                    </div>
+                    <div style="padding-left:10px;padding-bottom:10px">
+                        <input type="text" id="dateOfBirth" data-bind="value: dateOfBirth" placeholder="Date of Birth" style="font-size:1.0em;width:100%">
+                        <script>
+                            $(function () {
+                                $("#dateOfBirth").kendoDatePicker({
+                                    dataSource: app.encounterData,
+                                    autoBind: false,
+                                    animation: false,
+                                    format: "MM/dd/yyyy"
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input id="patientGender" data-bind="value: gender">
+                        <script>
+                            $(document).ready(function () {
+                                $("#patientGender").kendoDropDownList({
+                                    valuePrimitive: false,
+                                    autoBind: false,
+                                    dataTextField: "description",
+                                    dataValueField: "code",
+                                    dataSource: app.genders,
+                                    index: 0,
+                                    optionLabel: "Gender",
+                                    search: function (item) {
+                                        this.search(item);
+                                        this.select(this.selectedIndex);
+                                    }
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input id="patientInsurer" data-bind="value: insurerCode">
+                        <script>
+                            $(document).ready(function () {
+                                $("#patientInsurer").kendoDropDownList({
+                                    dataTextField: "description",
+                                    dataValueField: "code",
+                                    dataSource: app.insurers,
+                                    autoBind: false,
+                                    valuePrimitive: false,
+                                    index: 0,
+                                    optionLabel: "Other Insurer"
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input id="ihn" name="ihn" data-bind="value:ihn" placeholder="Insurer health number" />
+                        <script>
+                            $(document).ready(function () {
+                                $("#ihn").kendoNumericTextBox({
+                                    format: "#############",
+                                    spinners: false,
+                                    decimals: 0,
+                                    autoBind: false
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+                <div>
+                    <div style="height:20px">
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input id="procCode" name="proccode" data-bind="value:procCode" placeholder="Procedure" style="width:70%" />
+                        <script>
+                            $(document).ready(function () {
+                                $("#procCode").kendoNumericTextBox({
+                                    format: "00000",
+                                    max: 99999,
+                                    spinners: false,
+                                    decimals: 0,
+                                    change: function () {
+                                        app.localProcs.filter({
+                                            field: "label",
+                                            operator: "eq",
+                                            value: this.value()
+                                        });
+                                        var view = app.localProcs.view();
+                                        if (view.length == 0) {
+                                            alert("That is not a valid procedure code");
+                                        } else {
+                                            window.encounterView.set("procId", view[0].code);
+                                            app.localProcs.filter({});
+                                            if (view[0].called) {
+                                                $('#calledDiv').fadeIn('fast');
+                                            } else {
+                                                $('#calledDiv').fadeOut('fast');
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        </script>
+                        <button data-role="button" data-bind="click: findProc">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <script>
+                            function disChange() {
+                                app.localDiseases.filter({
+                                    field: "label",
+                                    operator: "eq",
+                                    value: $('#diseasecode').val()
+                                });
+                                var view = app.localDiseases.view();
+                                if (view.length == 0) {
+                                    alert("That is not a valid disease code");
+                                } else {
+                                    window.encounterView.set("diseaseId", view[0].code);
+                                    app.localDiseases.filter({});
+                                }
+                            };
+                        </script>
+                        <input id="diseasecode" onChange="javascript:disChange();" name="diseasecode" data-bind="value:diseaseCode" class="k-input k-textbox" placeholder="Disease Code" style="width:70%;font-size:1.0em" />
+                        <button data-role="button" data-bind="click: findDisease">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                    <div id="calledDiv" style="width:90%;padding-left:10px;padding-bottom:10px;display:none">
+                        Called
+                        <button data-role="button" data-bind="click: called">
+                            <span class="k-icon k-i-clock"></span>
+                        </button>
+                        <input id="encCalledTime" data-bind="value:calledTime" />
+                        <script>
+                            $(function () {
+                                $("#encCalledTime").kendoDateTimePicker({
+                                    animation: false,
+                                    format: "MM/dd/yyyy HH:mm",
+                                    parseFormats: ["HHmm"],
+                                    autoBind: false,
+			                        timeFormat: "HH:mm" //24 hours format
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        Start
+                        <button data-role="button" data-bind="click: start">
+                            <span class="k-icon k-i-clock"></span>
+                        </button>
+                        <input id="encStartTime" data-bind="value:startTime" />
+                        <script>
+                            var onChange = function (e) {
+                                var time = new Date(e.sender.value());
+                                $('#toDay').data('kendoDatePicker').min(new Date(time.getFullYear(), time.getMonth(), 1));
+                                var month = time.getMonth() + 1;
+                                var year = time.getFullYear();
+                                if (month == 12) {
+                                    month = 0;
+                                    year = year + 1;
+                                }
+                                $('#toDay').data('kendoDatePicker').max(new Date(year, month, 0));
+                                isHoliday(e.sender.value());
+                                allowCallback(new Date(e.sender.value()));
+                            };
+                            $(function () {
+                                $("#encStartTime").kendoDateTimePicker({
+                                    animation: false,
+                                    format: "MM/dd/yyyy HH:mm",
+                                    parseFormats: ["HHmm"],
+                                    autoBind: false,
+			                        timeFormat: "HH:mm"
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        Stop
+                        <button data-role="button" data-bind="click: stop">
+                            <span class="k-icon k-i-clock"></span>
+                        </button>
+                        <input id="encStopTime" data-bind="value:stopTime" />
+                        <script>
+                            $(function () {
+                                $("#encStopTime").kendoDateTimePicker({
+                                    animation: false,
+                                    format: "MM/dd/yyyy HH:mm",
+                                    parseFormats: ["HHmm"],
+                                    autoBind: false,
+			                        timeFormat: "HH:mm"
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div id="toDayDiv" style="padding-left:10px;padding-bottom:10px;width:90%;display:none">
+                        <input type="text" id="toDay" data-bind="value: toDay" placeholder="To day" style="font-size:1.0em;width:100%">
+                        <script>
+                            $(document).ready(function () {
+                                $("#toDay").kendoDatePicker({
+                                    dataSource: app.encounterData,
+                                    autoBind: false,
+                                    animation: false,
+                                    format: "MM/dd/yyyy"
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input type="text" id="referral" class="k-input k-textbox" data-bind="value: referral" placeholder="Referred By" style="font-size:1.1em;width:70%"
+                               onBlur="app.findByMsp()">
+                        <button data-role="button" data-bind="click: findDoctor">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                    <div id="callbackDiv" style="width:90%;padding-left:10px;padding-bottom:10px;display:none">
+                        Callback
+                        <input type="checkbox" data-bind="checked: callback">
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <textarea id="notes" rows=4 cols=30 data-bind="value: notes" placeholder="notes" data-option-label="Notes"></textarea>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <input id="location" data-bind="value: locationCode">
+                        <script>
+                            $(document).ready(function () {
+                                $("#location").kendoDropDownList({
+                                    autoBind: false,
+                                    valuePrimitive: false,
+                                    dataTextField: "description",
+                                    dataValueField: "code",
+                                    dataSource: app.locations,
+                                    index: 0,
+                                    optionLabel: "Service Location",
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    var tabstrip = $("#tabstrip").kendoTabStrip({}).data("kendoTabStrip");
+                });
+            </script>
+        </div>
+    </form>
+</div>
+<!-- END_CUSTOM_CODE_home -->
+<div data-role="view" id="activityForm" data-title="MMB Billing - Activity" data-model="activityView" data-layout="activityLayout">
+    <!-- START_CUSTOM_CODE_home -->
+    <form>
+        <div style="height:20px;width:100%">
+        </div>
+        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+            <input type="text" id="npclinicdoc" class="k-input k-textbox" required="required" data-bind="value: clinicDoctor" placeholder="Clinic Doc" style="font-size:1.1em;width:70%">
+            <button data-role="button" data-bind="click: findClinicDoc">
+                <span class="k-icon k-i-search"></span>
+            </button>
+        </div>
+        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+            <input id="activityType" name="activityType" data-bind="value:activityType" placeholder="Activity" style="width:70%;font-size:1.1em" />
+            <button data-role="button" data-bind="click: findActivity">
+                <span class="k-icon k-i-search"></span>
+            </button>
+        </div>
+        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+            Start
+            <button data-role="button" data-bind="click: start">
+                <span class="k-icon k-i-clock"></span>
+            </button>
+            <input id="actStartTime" data-bind="value: startTime" />
+            <script>
+                $(function () {
+                    $("#actStartTime").kendoDateTimePicker({
+                        animation: false,
+                        format: "MM/dd/yyyy HH:mm",
+                        autoBind: false,
+                        timeFormat: "HH:mm"
+                    });
+                });
+            </script>
+        </div>
+        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+            Stop
+            <button data-role="button" data-bind="click: stop">
+                <span class="k-icon k-i-clock"></span>
+            </button>
+            <input id="actStopTime" data-bind="value: stopTime" />
+            <script>
+                $(function () {
+                    $("#actStopTime").kendoDateTimePicker({
+                        animation: false,
+                        format: "MM/dd/yyyy HH:mm",
+                        autoBind: false,
+                        timeFormat: "HH:mm"
+                    });
+                });
+            </script>
+        </div>
+        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+            <textarea id="actnotes" rows=4 cols=30 data-bind="value:notes" data-option-label="Notes"></textarea>
+        </div>
+    </form>
+    <!-- END_CUSTOM_CODE_home -->
+</div>
+<script id="procTemplate" type="text/x-kendo.template">
+    <div>
+        <div style="width:85%;float:left;height:35px" data-bind="click: setProcedure">
+            <span data-bind="text: description"></span>
+        </div>
+        <div style="height:35px" data-bind="click: flipFav">
+            <img src="#:icon()#">
+        </div>
+    </div>
+</script>
+<div data-role="view" id="procLookup" data-title="MMB - Procedure Lookup" data-layout="procSearchLayout" data-model="window.procView">
+    <ul id="proclist" data-role="listview" data-template="procTemplate" data-virtual-view-size=50 data-endless-scroll="true" data-bind="source:localProcs">
+    </ul>
+</div>
+<script id="disTemplate" type="text/x-kendo.template">
+    <div>
+        <div style="width:85%;float:left;height:35px" data-bind="click: setDisease">
+            <span data-bind="text: description"></span>
+        </div>
+        <div style="height:35px" data-bind="click: flipDis">
+            <img src="#:icon()#">
+        </div>
+    </div>
+</script>
+<div data-role="view" id="diseaseLookup" data-title="MMB - Disease Lookup" data-layout="disSearchLayout" data-model="window.diseaseView">
+    <ul id="dislist" data-role="listview" data-template="disTemplate" data-virtual-view-size=50 data-endless-scroll="true" data-bind="source:localDiseases">
+    </ul>
+</div>
+<script id="docTemplate" type="text/x-kendo.template">
+    <div>
+        <div style="width:85%;float:left;height:35px" data-bind="click: setClinicDoc">
+            (<span data-bind="text: label"></span>)
+            <span data-bind="text: name"></span>
+        </div>
+        <div style="height:35px" data-bind="click: flipDoc">
+            <img src="#:icon()#">
+        </div>
+    </div>
+</script>
+<div data-role="view" id="clinicDocLookup" data-title="MMB - Clinic Doctor" data-layout="docSearchLayout" data-model="window.clinicDocView">
+    <ul id="doclist" data-role="listview" data-template="docTemplate" data-bind="source:clinicDocs">
+    </ul>
+</div>
+<script id="refTemplate" type="text/x-kendo.template">
+    <div>
+        <div style="width:85%;float:left;height:35px" data-bind="click: setReferral">
+            <span data-bind="text: name"></span> (
+            <span data-bind="text: msp"></span>)
+        </div>
+    </div>
+</script>
+<div data-role="view" id="refLookup" data-title="MMB - Referring Doctor" data-layout="refSearchLayout" data-model="window.referralView">
+    <ul id="reflist" data-role="listview" data-template="refTemplate" data-virtual-view-size=50 data-endless-scroll="true" data-bind="source:localDocs">
+    </ul>
+</div>
+<script id="activityTemplate" type="text/x-kendo.template">
+    <div>
+        <div style="width:85%;float:left;height:35px" data-bind="click: setActivity">
+            <span data-bind="text: description"></span>
+        </div>
+        <div style="height:35px" data-bind="click: flipActivity">
+            <img src="#:icon()#">
+        </div>
+    </div>
+</script>
+<div data-role="view" id="activityLookup" data-title="MMB - Activity Lookup" data-layout="actSearchLayout" data-model="window.activityLookupView">
+    <ul id="activitylist" data-role="listview" data-template="activityTemplate" data-bind="source:activities">
+    </ul>
+</div>
