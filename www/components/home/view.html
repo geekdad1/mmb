@@ -1,6 +1,4 @@
 <div data-role="view" id="login" data-title="Medinet Mobile Billing - Login" data-layout="login" data-model="loginView">
-<!-- The debugger won't allow you to open this file, so put in a console.log("got here") statement
-	into the code where you want and then use it from the debugger console to open the code -->
     <form>
         <div style="height:40px">
         </div>
@@ -22,20 +20,25 @@
         <script>
             $("#progressbar").kendoProgressBar({
                 min: 0,
-                max: 11,
+                max: 12,
                 value: 0,
                 showStatus: false,
                 complete: function () {
                     $('#progressbar').fadeOut("fast");
                     $('#progressbar').data('kendoProgressBar').value(0);
-                    app.mobileApp.navigate("#calendar");
+					if (app.calendarData._data.length > 0) {
+	                    app.mobileApp.navigate("#calendar");
+	                }
+	                else {
+	                	app.mobileApp.navigate("#splash");
+	                }
                 }
             });
         </script>
     </div>
     <!-- END_CUSTOM_CODE_home -->
 </div>
-<div data-role="view" id="register" data-title="MMB - Register" data-layout="register" data-model="registerView">
+<div data-role="view" id="register" data-title="Medinet Mobile Billing - Register" data-layout="register" data-model="registerView">
     <!-- START_CUSTOM_CODE_home -->
     <form>
         <div style="height:40px">
@@ -61,7 +64,7 @@
     </form>
     <!-- END_CUSTOM_CODE_home -->
 </div>
-<div data-role="view" id="reset" data-title="MMB - Reset Password" data-layout="resetpw" data-model="pwChangeView">
+<div data-role="view" id="reset" data-title="Medinet Mobile Billing - Reset Password" data-layout="resetpw" data-model="pwChangeView">
     <!-- START_CUSTOM_CODE_home -->
     <form>
         <div style="height:40px">
@@ -84,7 +87,18 @@
     </form>
     <!-- END_CUSTOM_CODE_home -->
 </div>
-<div id="calendar" data-role="view" data-title="MMB - Calendar" data-model="calendarView" data-layout="calendarLayout">
+<div id="splash" data-role="view" data-title="Medinet Mobile Billing" data-layout="splashLayout">
+	<div style="padding-left:10px;padding-right:10px;padding-top:10px">
+	Medinet Mobile Billing allows you to track both patient interactions (claims) and non patient
+	activity. So you can track your non billable time, CME credits, etc. at the time you are performing the activities.
+	You can opt to track your time on the fly or after the fact.<p>
+	The menus are always the bottom of the screen.<p>
+	Click on Claim to record a patient interaction and Activity for your non billable time.<p>
+	Once you have started tracking your claims, they will show up here until you complete them
+	and send them out for billing.  Activities for last 2 weeks will always show up here.
+	</div>
+</div>
+<div id="calendar" data-role="view" data-title="Medinet Mobile Billing - Calendar" data-model="calendarView" data-layout="calendarLayout">
     <div id="mainCalendar">
     </div>
     <script>
@@ -98,8 +112,7 @@
                     var cur = pb.value() + 1;
                     pb.value(cur);
                 },
-                navigate: function (e) { console.log("navigate");
-                                       },
+                navigate: function (e) {},
                 select: function (e) {
                     app.curEvent = this.dataSource.getByUid(e.node.dataset.uid).id;
                     if (app.curEvent === undefined) {
@@ -110,8 +123,6 @@
                         app.mobileApp.navigate("#encounter");
                         $("#addenc").fadeOut("fast");
                         $("#updenc").fadeIn("fast");
-				        var tabToActivate = $("#demogTab");			//reset the tab before we show the form
-        				$("#tabstrip").data("kendoTabStrip").activateTab(tabToActivate);
                     } else if (this.dataSource.getByUid(e.node.dataset.uid).type == "unpaid") {
                         app.activityData.read();
                         app.mobileApp.navigate("#activityForm");
@@ -125,14 +136,10 @@
         });
     </script>
 </div>
-<div data-role="view" id="encounter" data-title="MMB - Claim" data-model="encounterView" data-layout="encounterLayout">
+<div data-role="view" id="encounter" data-title="Medinet Mobile Billing - Claim" data-model="encounterView" data-layout="encounterLayout">
     <!-- START_CUSTOM_CODE_home -->
     <form>
         <div>
-            <div style="height:20px">
-                <!-- needed to force the clinic doctor to show properly -->
-                &nbsp;
-            </div>
             <div style="width:90%;padding-left:10px;padding-bottom:10px">
                 <input type="text" id="clinicdoc" class="k-input k-textbox" required="required" data-bind="value: clinicDoctor" placeholder="Clinic Doc" style="font-size:1.1em;width:70%">
                 <button data-role="button" data-bind="click: findClinicDoc">
@@ -142,7 +149,8 @@
             <div id="tabstrip">
                 <ul>
                     <li id="demogTab" class="k-state-active">Demographics</li>
-                    <li>Encounter</li>
+                    <li>Claim</li>
+                    <li>Extras</li>
                 </ul>
                 <div>
                     <div style="height:20px;width:100%">
@@ -182,26 +190,34 @@
                             </script>
                         </div>
                         <div>
-                            <div style="padding-left:10px;padding-bottom:10px;padding-right:20px;float:left">
-                                <input id="phn" name="phn" data-bind="value:phn" placeholder="PHN" />
-                                <script>
-                                    $(document).ready(function () {
-                                        $("#phn").kendoNumericTextBox({
-                                            format: "#############",
-                                            spinners: false,
-                                            decimals: 0,
-                                            optionLabel: "PHN",
-                                            autoBind: false,
-                                            change: function () {
-                                                numb = this.value();
-                                                if ((numb != null) && (numb.toString().length == 10)) {
-                                                    app.findPHN();
-                                                }
-                                            }
-                                        });
-                                    });
-                                </script>
-                            </div>
+                        	<div style="width:90%;padding-left:10px;padding-bottom:10px;padding-right:20px;float:left">
+								<input id="phn" name="phn" data-bind="value:phn" placeholder="PHN" />
+								<script>
+									$(document).ready(function () {
+										$("#phn").kendoNumericTextBox({
+											format: "#############",
+											spinners: false,
+											decimals: 0,
+											optionLabel: "PHN",
+											autoBind: false,
+											change: function () {
+												numb = this.value();
+												if ((numb != null) && (numb.toString().length == 10)) {
+													if (checkPHN(this.value()) == 1) {
+														app.findPHN();
+														var dropdownlist = $("#patientInsurer").data("kendoDropDownList");
+														var dataItem = dropdownlist.dataItem();
+
+														if (dataItem.description == "MSP") { // If BC set phn
+															encounterView.set("ihn", this.value());
+														}
+													}
+												}
+											}
+										});
+									});
+								</script>
+							</div>
                             <div id="mic" onClick="app.sendVoice();">
                                 <img src="components/images/mic.png" width=24px height=24px>
                             </div>
@@ -216,16 +232,16 @@
                         </div>
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                        <input type="text" id="lastname" class="k-textbox" data-bind="value: lastname" placeholder="Last name" style="font-size:1.1em;width:100%">
+                        <input type="text" id="lastname" name="lastname" class="k-textbox" data-bind="value: lastname" placeholder="Last name" style="font-size:1.1em;width:100%">
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                        <input type="text" id="firstname" class="k-textbox" data-bind="value: firstname" placeholder="First name" style="font-size:1.1em;width:100%">
+                        <input type="text" id="firstname" name="firstname" class="k-textbox" data-bind="value: firstname" placeholder="First name" style="font-size:1.1em;width:100%">
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                        <input type="text" id="initials" class="k-textbox" data-bind="value: initials" placeholder="Initials" style="font-size:1.1em;width:100%">
+                        <input type="text" id="initials" name="initials" class="k-textbox" data-bind="value: initials" placeholder="Initials" style="font-size:1.1em;width:100%">
                     </div>
                     <div style="padding-left:10px;padding-bottom:10px">
-                        <input type="text" id="dateOfBirth" data-bind="value: dateOfBirth" placeholder="Date of Birth" style="font-size:1.0em;width:100%">
+                        <input type="text" id="dateOfBirth" name="dateOfBirth" data-bind="value: dateOfBirth" placeholder="Date of Birth" style="font-size:1.0em;width:100%">
                         <script>
                             $(function () {
                                 $("#dateOfBirth").kendoDatePicker({
@@ -238,7 +254,7 @@
                         </script>
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                        <input id="patientGender" data-bind="value: gender">
+                        <input id="patientGender" name="gender" data-bind="value: gender">
                         <script>
                             $(document).ready(function () {
                                 $("#patientGender").kendoDropDownList({
@@ -291,7 +307,7 @@
                     <div style="height:20px">
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                        <input id="procCode" name="proccode" data-bind="value:procCode" placeholder="Procedure" style="width:70%" />
+                        <input id="procCode" name="proccode" data-bind="value:procCode" placeholder="Procedure or Diagnosis" style="width:70%" />
                         <script>
                             $(document).ready(function () {
                                 $("#procCode").kendoNumericTextBox({
@@ -311,11 +327,6 @@
                                         } else {
                                             window.encounterView.set("procId", view[0].code);
                                             app.localProcs.filter({});
-                                            if (view[0].called) {
-                                                $('#calledDiv').fadeIn('fast');
-                                            } else {
-                                                $('#calledDiv').fadeOut('fast');
-                                            }
                                         }
                                     }
                                 });
@@ -335,35 +346,17 @@
                                 });
                                 var view = app.localDiseases.view();
                                 if (view.length == 0) {
-                                    alert("That is not a valid disease code");
+                                    alert("That is not a valid diagnostic code");
                                 } else {
                                     window.encounterView.set("diseaseId", view[0].code);
                                     app.localDiseases.filter({});
                                 }
                             };
                         </script>
-                        <input id="diseasecode" onChange="javascript:disChange();" name="diseasecode" data-bind="value:diseaseCode" class="k-input k-textbox" placeholder="Disease Code" style="width:70%;font-size:1.0em" />
+                        <input id="diseasecode" onChange="javascript:disChange();" name="diseasecode" data-bind="value:diseaseCode" class="k-input k-textbox" placeholder="Diagnostic Code" style="width:70%;font-size:1.0em" />
                         <button data-role="button" data-bind="click: findDisease">
                             <span class="k-icon k-i-search"></span>
                         </button>
-                    </div>
-                    <div id="calledDiv" style="width:90%;padding-left:10px;padding-bottom:10px;display:none">
-                        Called
-                        <button data-role="button" data-bind="click: called">
-                            <span class="k-icon k-i-clock"></span>
-                        </button>
-                        <input id="encCalledTime" data-bind="value:calledTime" />
-                        <script>
-                            $(function () {
-                                $("#encCalledTime").kendoDateTimePicker({
-                                    animation: false,
-                                    format: "MM/dd/yyyy HH:mm",
-                                    parseFormats: ["HHmm"],
-                                    autoBind: false,
-			                        timeFormat: "HH:mm" //24 hours format
-                                });
-                            });
-                        </script>
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         Start
@@ -389,9 +382,8 @@
                                 $("#encStartTime").kendoDateTimePicker({
                                     animation: false,
                                     format: "MM/dd/yyyy HH:mm",
-                                    parseFormats: ["HHmm"],
                                     autoBind: false,
-			                        timeFormat: "HH:mm"
+                                    change: onChange
                                 });
                             });
                         </script>
@@ -407,9 +399,7 @@
                                 $("#encStopTime").kendoDateTimePicker({
                                     animation: false,
                                     format: "MM/dd/yyyy HH:mm",
-                                    parseFormats: ["HHmm"],
-                                    autoBind: false,
-			                        timeFormat: "HH:mm"
+                                    autoBind: false
                                 });
                             });
                         </script>
@@ -428,8 +418,7 @@
                         </script>
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                        <input type="text" id="referral" class="k-input k-textbox" data-bind="value: referral" placeholder="Referred By" style="font-size:1.1em;width:70%"
-                               onBlur="app.findByMsp()">
+                        <input type="text" id="referral" class="k-input k-textbox" data-bind="value: referral" placeholder="Referred By" style="font-size:1.1em;width:70%">
                         <button data-role="button" data-bind="click: findDoctor">
                             <span class="k-icon k-i-search"></span>
                         </button>
@@ -439,7 +428,7 @@
                         <input type="checkbox" data-bind="checked: callback">
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                        <textarea id="notes" rows=4 cols=30 data-bind="value: notes" placeholder="notes" data-option-label="Notes"></textarea>
+                        <textarea id="notes" rows=4 cols=30 data-bind="value: notes" data-option-label="Notes"></textarea>
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         <input id="location" data-bind="value: locationCode">
@@ -458,6 +447,209 @@
                         </script>
                     </div>
                 </div>
+                <div>
+                    <div style="height:20px">
+                    </div>
+                    <div>
+                        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                            <input id="qty1" name="qty1" data-bind="value:qty1" placeholder="qty" />
+                            <script>
+                                $(document).ready(function () {
+                                    $("#qty1").kendoNumericTextBox({
+                                        format: "##",
+                                        spinners: false,
+                                        decimals: 0,
+                                        optionLabel: "Qty",
+                                        autoBind: false
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <script>
+                            function fee1Change() {
+                                app.localFeeCodes.filter({
+                                    field: "label",
+                                    operator: "eq",
+                                    value: $('#feecode1').val()
+                                });
+                                var view = app.localFeeCodes.view();
+                                if (view.length == 0) {
+                                    alert("That is not a valid fee code");
+                                } else {
+                                    window.encounterView.set("feeCode1", view[0].label);
+                                    window.encounverView.set("feeId1", view[0].code);
+                                    app.localFeeCodes.filter({});
+                                }
+                            };
+                        </script>
+                        <input id="feecode1" onChange="javascript:fee1Change();" name="feecode1" data-bind="value:feeCode1" class="k-input k-textbox" placeholder="FeeCode" style="width:70%;font-size:1.0em" />
+                        <button id="findFeeCode1" data-role="button" data-bind="click: findFeeCode">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                    <div style="height:20px">
+                    </div>
+                    <div>
+                        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                            <input id="qty2" name="qty2" data-bind="value:qty2" placeholder="qty" />
+                            <script>
+                                $(document).ready(function () {
+                                    $("#qty2").kendoNumericTextBox({
+                                        format: "##",
+                                        spinners: false,
+                                        decimals: 0,
+                                        optionLabel: "Qty",
+                                        autoBind: false
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <script>
+                            function fee2Change() {
+                                app.localFeeCodes.filter({
+                                    field: "label",
+                                    operator: "eq",
+                                    value: $('#feecode2').val()
+                                });
+                                var view = app.localFeeCodes.view();
+                                if (view.length == 0) {
+                                    alert("That is not a valid fee code");
+                                } else {
+                                    window.encounterView.set("feeCode2", view[0].code);
+                                    app.localFeeCodes.filter({});
+                                }
+                            };
+                        </script>
+                        <input id="feeCode2" onChange="javascript:fee2Change();" name="feeCode2" data-bind="value:feeCode2" class="k-input k-textbox" placeholder="FeeCode" style="width:70%;font-size:1.0em" />
+                        <button id="findFeeCode2" data-role="button" data-bind="click: findFeeCode">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                    <div style="height:20px">
+                    </div>
+                    <div>
+                        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                            <input id="qty3" name="qty3" data-bind="value:qty3" placeholder="qty" />
+                            <script>
+                                $(document).ready(function () {
+                                    $("#qty3").kendoNumericTextBox({
+                                        format: "##",
+                                        spinners: false,
+                                        decimals: 0,
+                                        optionLabel: "Qty",
+                                        autoBind: false
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <script>
+                            function fee3Change() {
+                                app.localFeeCodes.filter({
+                                    field: "label",
+                                    operator: "eq",
+                                    value: $('#feecode3').val()
+                                });
+                                var view = app.localFeeCodes.view();
+                                if (view.length == 0) {
+                                    alert("That is not a valid fee code");
+                                } else {
+                                    window.encounterView.set("feeCode3", view[0].code);
+                                    app.localFeeCodes.filter({});
+                                }
+                            };
+                        </script>
+                        <input id="feeCode3" onChange="javascript:fee3Change();" name="feeCode3" data-bind="value:feeCode3" class="k-input k-textbox" placeholder="FeeCode" style="width:70%;font-size:1.0em" />
+                        <button id="findFeeCode3" data-role="button" data-bind="click: findFeeCode">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                    <div style="height:20px">
+                    </div>
+                    <div>
+                        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                            <input id="qty4" name="qty4" data-bind="value:qty4" placeholder="qty" />
+                            <script>
+                                $(document).ready(function () {
+                                    $("#qty4").kendoNumericTextBox({
+                                        format: "##",
+                                        spinners: false,
+                                        decimals: 0,
+                                        optionLabel: "Qty",
+                                        autoBind: false
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <script>
+                            function fee4Change() {
+                                app.localFeeCodes.filter({
+                                    field: "label",
+                                    operator: "eq",
+                                    value: $('#feecode4').val()
+                                });
+                                var view = app.localFeeCodes.view();
+                                if (view.length == 0) {
+                                    alert("That is not a valid fee code");
+                                } else {
+                                    window.encounterView.set("feeCode4", view[0].code);
+                                    app.localFeeCodes.filter({});
+                                }
+                            };
+                        </script>
+                        <input id="feeCode4" onChange="javascript:fee4Change();" name="feeCode4" data-bind="value:feeCode4" class="k-input k-textbox" placeholder="FeeCode" style="width:70%;font-size:1.0em" />
+                        <button id="findFeeCode4" data-role="button" data-bind="click: findFeeCode">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                    <div style="height:20px">
+                    </div>
+                    <div>
+                        <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                            <input id="qty5" name="qty5" data-bind="value:qty5" placeholder="qty" />
+                            <script>
+                                $(document).ready(function () {
+                                    $("#qty5").kendoNumericTextBox({
+                                        format: "##",
+                                        spinners: false,
+                                        decimals: 0,
+                                        optionLabel: "Qty",
+                                        autoBind: false
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        <script>
+                            function fee5Change() {
+                                app.localFeeCodes.filter({
+                                    field: "label",
+                                    operator: "eq",
+                                    value: $('#feecode5').val()
+                                });
+                                var view = app.localFeeCodes.view();
+                                if (view.length == 0) {
+                                    alert("That is not a valid fee code");
+                                } else {
+                                    window.encounterView.set("feeCode5", view[0].code);
+                                    app.localFeeCodes.filter({});
+                                }
+                            };
+                        </script>
+                        <input id="feeCode5" onChange="javascript:fee5Change();" name="feeCode5" data-bind="value:feeCode5" class="k-input k-textbox" placeholder="FeeCode" style="width:70%;font-size:1.0em" />
+                        <button id="findFeeCode5" data-role="button" data-bind="click: findFeeCode">
+                            <span class="k-icon k-i-search"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
             <script>
                 $(document).ready(function () {
@@ -468,7 +660,7 @@
     </form>
 </div>
 <!-- END_CUSTOM_CODE_home -->
-<div data-role="view" id="activityForm" data-title="MMB Billing - Activity" data-model="activityView" data-layout="activityLayout">
+<div data-role="view" id="activityForm" data-title="Medinet Mobile Billing - Activity" data-model="activityView" data-layout="activityLayout">
     <!-- START_CUSTOM_CODE_home -->
     <form>
         <div style="height:20px;width:100%">
@@ -496,8 +688,7 @@
                     $("#actStartTime").kendoDateTimePicker({
                         animation: false,
                         format: "MM/dd/yyyy HH:mm",
-                        autoBind: false,
-                        timeFormat: "HH:mm"
+                        autoBind: false
                     });
                 });
             </script>
@@ -513,8 +704,7 @@
                     $("#actStopTime").kendoDateTimePicker({
                         animation: false,
                         format: "MM/dd/yyyy HH:mm",
-                        autoBind: false,
-                        timeFormat: "HH:mm"
+                        autoBind: false
                     });
                 });
             </script>
@@ -530,12 +720,12 @@
         <div style="width:85%;float:left;height:35px" data-bind="click: setProcedure">
             <span data-bind="text: description"></span>
         </div>
-        <div style="height:35px" data-bind="click: flipFav">
+        <div style="height:35px" data-bind="click: flipProc">
             <img src="#:icon()#">
         </div>
     </div>
 </script>
-<div data-role="view" id="procLookup" data-title="MMB - Procedure Lookup" data-layout="procSearchLayout" data-model="window.procView">
+<div data-role="view" id="procLookup" data-title="Medinet Mobile Billing - Procedure Lookup" data-layout="procSearchLayout" data-model="window.procView">
     <ul id="proclist" data-role="listview" data-template="procTemplate" data-virtual-view-size=50 data-endless-scroll="true" data-bind="source:localProcs">
     </ul>
 </div>
@@ -549,7 +739,7 @@
         </div>
     </div>
 </script>
-<div data-role="view" id="diseaseLookup" data-title="MMB - Disease Lookup" data-layout="disSearchLayout" data-model="window.diseaseView">
+<div data-role="view" id="diseaseLookup" data-title="Medinet Mobile Billing - Diagnostic Lookup" data-layout="disSearchLayout" data-model="window.diseaseView">
     <ul id="dislist" data-role="listview" data-template="disTemplate" data-virtual-view-size=50 data-endless-scroll="true" data-bind="source:localDiseases">
     </ul>
 </div>
@@ -564,7 +754,7 @@
         </div>
     </div>
 </script>
-<div data-role="view" id="clinicDocLookup" data-title="MMB - Clinic Doctor" data-layout="docSearchLayout" data-model="window.clinicDocView">
+<div data-role="view" id="clinicDocLookup" data-title="Medinet Mobile Billing - Clinic Doctor" data-layout="docSearchLayout" data-model="window.clinicDocView">
     <ul id="doclist" data-role="listview" data-template="docTemplate" data-bind="source:clinicDocs">
     </ul>
 </div>
@@ -574,10 +764,27 @@
             <span data-bind="text: name"></span> (
             <span data-bind="text: msp"></span>)
         </div>
+        <div style="height:35px" data-bind="click: flipRefDoctor">
+            <img src="#:icon()#">
+        </div>
     </div>
 </script>
-<div data-role="view" id="refLookup" data-title="MMB - Referring Doctor" data-layout="refSearchLayout" data-model="window.referralView">
+<div data-role="view" id="refLookup" data-title="Medinet Mobile Billing - Referring Doctor" data-layout="refSearchLayout" data-model="window.referralView">
     <ul id="reflist" data-role="listview" data-template="refTemplate" data-virtual-view-size=50 data-endless-scroll="true" data-bind="source:localDocs">
+    </ul>
+</div>
+<script id="feeCodeTemplate" type="text/x-kendo.template">
+    <div>
+        <div style="width:85%;float:left;height:35px" data-bind="click:setFeeCode">
+            <span data-bind="text: description"></span>
+        </div>
+        <div style="height:35px" data-bind="click: flipFeeCode">
+            <img src="#:icon()#">
+        </div>
+    </div>
+</script>
+<div data-role="view" id="feeCodeLookup" data-title="Medinet Mobile Billing - Fee Code Lookup" data-layout="feeCodeSearchLayout" data-model="window.feeCodeView">
+    <ul id="feeCodelist" data-role="listview" data-template="feeCodeTemplate" data-virtual-view-size=50 data-endless-scroll="true" data-bind="source:localFeeCodes">
     </ul>
 </div>
 <script id="activityTemplate" type="text/x-kendo.template">
@@ -590,7 +797,7 @@
         </div>
     </div>
 </script>
-<div data-role="view" id="activityLookup" data-title="MMB - Activity Lookup" data-layout="actSearchLayout" data-model="window.activityLookupView">
+<div data-role="view" id="activityLookup" data-title="Medinet Mobile Billing - Activity Lookup" data-layout="actSearchLayout" data-model="window.activityLookupView">
     <ul id="activitylist" data-role="listview" data-template="activityTemplate" data-bind="source:activities">
     </ul>
 </div>

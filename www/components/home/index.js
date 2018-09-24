@@ -1,6 +1,8 @@
 'use strict';
 (function () {
     window.loginView = kendo.observable({
+        onShow: function () {},
+        afterShow: function () {},
         username: null,
         password: null,
         datacentre: null,
@@ -94,6 +96,9 @@
                     return;
                 }
             }
+            if (checkPHN(this.phn) == 0) {
+            	return;
+            }
             if (this.lastname == "") {
                 alert("Last name is required");
                 return;
@@ -102,9 +107,17 @@
                 alert("First name is required");
                 return;
             }
+            if (this.dateOfBirth == null) {
+            	alert("Date of birth needs to be in mm/dd/yyyy format");
+            	return;
+            }
             if (this.dateOfBirth == "") {
                 alert("Date of birth is required");
                 return;
+            }
+            if (this.gender == undefined) {
+            	alert("You must select a gender");
+            	return;
             }
             if (this.gender == "") {
                 alert("Gender is required");
@@ -121,6 +134,11 @@
                     return;
                 }
             }
+            if ((this.startTime == "") || (this.startTime == null)) {
+                alert("Start time is required");
+                return;
+            }
+
             if ((this.procCode == "") || (this.procCode == null)) {
                 $("#tabstrip").select(1);
                 alert("Procedure code is required");
@@ -128,26 +146,8 @@
             }
 
             var item = app.procedures.get(this.procId);
-            if ($("#calledDiv").is(':visible')) {
-                if (item.called) {
-                    if ((this.calledTime == null) || (this.calledTime == "")) {
-	                	alert ("Called time is required");
-                        return;
-                    }
-                }
-            }
-            if ((this.startTime == "") || (this.startTime == null)) {
-                if (this.calledTime != "") {
-                    this.startTime = this.calledTime;
-                }
-                else {
-                    alert("Start time is required");
-                    return;
-                }
-            }
-
             var doc = app.clinicDocs.get(app.clinicDoctorId);
-            if ((item.timePeriod != null) ||
+            if ((item.timeReq) ||
                 (doc.specType == "Anes" && item.anesFee == false && item.critCare == false && item.specPhone == false)) {
                 if ((this.stopTime == "") || (this.stopTime == null)) {
                     alert("Stop time is required");
@@ -171,7 +171,39 @@
                     return;
                 }
             }
+            if (((this.feeCode1 ^= "") && (this.qty1 == "")) ||
+            	((this.feeCode1 == "") && (this.qty1 > 0))) {
+            	$("#tabstrip").select(3);
+            	alert("You must provide both a fee code and a quantity");
+            	return;
+            }
+            if (((this.feeCode2 ^= "") && (this.qty2 == "")) ||
+            	((this.feeCode2 == "") && (this.qty2 > 0))) {
+            	$("#tabstrip").select(3);
+            	alert("You must provide both a fee code and a quantity");
+            	return;
+            }
+            if (((this.feeCode3 ^= "") && (this.qty3 == "")) ||
+            	((this.feeCode3 == "") && (this.qty3 > 0))) {
+            	$("#tabstrip").select(3);
+            	alert("You must provide both a fee code and a quantity");
+            	return;
+            }
+            if (((this.feeCode4 ^= "") && (this.qty4 == "")) ||
+            	((this.feeCode4 == "") && (this.qty4 > 0))) {
+            	$("#tabstrip").select(3);
+            	alert("You must provide both a fee code and a quantity");
+            	return;
+            }
+            if (((this.feeCode5 ^= "") && (this.qty5 == "")) ||
+            	((this.feeCode5 == "") && (this.qty5 > 0))) {
+            	$("#tabstrip").select(3);
+            	alert("You must provide both a fee code and a quantity");
+            	return;
+            }
             if (app.curEvent == 0) {
+            	alert("Gender = " + this.gender);
+            	alert("DOB = " + this.dateOfBirth);
                 app.encounterData.add({
                     firstname: this.firstname,
                     lastname: this.lastname,
@@ -182,14 +214,13 @@
                     phn: this.phn,
                     insurerCode: this.insurerCode.code,
                     ihn: this.ihn,
-                    gender: this.gender.code,
+                    gender: this.gender,
                     procCode: this.procCode,
                     procId: this.procId,
                     diseaseCode: this.diseaseCode,
                     diseaseId: this.diseaseId,
                     locationCode: this.locationCode.code,
                     provCode: this.provCode.code,
-                    calledTime: this.calledTime,
                     startTime: this.startTime,
                     stopTime: this.stopTime,
                     type: "paid",
@@ -201,7 +232,31 @@
                     street1: this.street1,
                     street2: this.street2,
                     city: this.city,
-                    phone: this.phone
+                    phone: this.phone,
+                    serviceCode: app.clinicDocs.get(this.clinicDoctorId).serviceCode,
+                    subFacility: app.clinicDocs.get(this.clinicDoctorId).subFacility,
+                    scc: app.clinicDocs.get(this.clinicDoctorId).scc,
+                    facility: app.clinicDocs.get(this.clinicDoctorId).facility,
+                    serviceId1:0,
+                    qty1: this.qty1,
+                    feeCode1: this.feeCode1,
+                    feeId1: this.feeId1,
+                    serviceId2:0,
+                    qty2: this.qty2,
+                    feeCode2: this.feeCode2,
+                    feeId2: this.feeId2,
+                    serviceId3:0,
+                    qty3: this.qty3,
+                    feeCode3: this.feeCode3,
+                    feeId3: this.feeId3,
+                    serviceId4:0,
+                    qty4: this.qty4,
+                    feeCode4: this.feeCode4,
+                    feeId4: this.feeId4,
+                    serviceId5:0,
+                    qty5: this.qty5,
+                    feeCode5: this.feeCode5,
+                    feeId5: this.feeId5
                 });
 
             } else {
@@ -219,7 +274,6 @@
                 app.encounterData.at(0).set("ihn", this.ihn);
                 app.encounterData.at(0).set("clinicDoctor", this.clinicDoctor);
                 app.encounterData.at(0).set("clinicDoctorId", this.clinicDoctorId);
-                app.encounterData.at(0).set("calledTime", this.calledTime);
                 app.encounterData.at(0).set("startTime", this.startTime);
                 app.encounterData.at(0).set("stopTime", this.stopTime);
                 app.encounterData.at(0).set("dateOfBirth", this.dateOfBirth);
@@ -233,13 +287,94 @@
                 app.encounterData.at(0).set("street2",this.street1);
                 app.encounterData.at(0).set("city",this.city);
                 app.encounterData.at(0).set("phone",this.phone);
+                app.encounterData.at(0).set("qty1",this.qty1);
+                app.encounterData.at(0).set("serviceId1",this.serviceId1);
+                app.encounterData.at(0).set("serviceCode",app.clinicDocs.get(this.clinicDoctorId).serviceCode);
+                app.encounterData.at(0).set("subFacility",app.clinicDocs.get(this.clinicDoctorId).subFacility);
+                app.encounterData.at(0).set("facility",app.clinicDocs.get(this.clinicDoctorId).facility);
+                app.encounterData.at(0).set("scc",app.clinicDocs.get(this.clinicDoctorId).scc);
+                if (this.feeId1 != undefined) {
+                    app.encounterData.at(0).set("feeCode1",app.feeCodes.get(this.feeId1).label);
+                    app.encounterData.at(0).set("feeId1",this.feeId1);
+                }
+                else {
+                    app.encounterData.at(0).set("feeCode1",0);
+                    app.encounterData.at(0).set("feeId1",0);
+                }
+                app.encounterData.at(0).set("qty2",this.qty2);
+                app.encounterData.at(0).set("serviceId2",this.serviceId2);
+                if (this.feeId2 != undefined) {
+                    app.encounterData.at(0).set("feeCode2",app.feeCodes.get(this.feeId2).label);
+                    app.encounterData.at(0).set("feeId2",this.feeId2);
+                }
+                else {
+                    app.encounterData.at(0).set("feeCode2",0);
+                    app.encounterData.at(0).set("feeId2",0);
+                }
+                app.encounterData.at(0).set("qty3",this.qty3);
+                app.encounterData.at(0).set("serviceId3",this.serviceId3);
+                if (this.feeId3 != undefined) {
+                    app.encounterData.at(0).set("feeCode3",app.feeCodes.get(this.feeId3).label);
+                    app.encounterData.at(0).set("feeId3",this.feeId3);
+                }
+                else {
+                    app.encounterData.at(0).set("feeCode3",0);
+                    app.encounterData.at(0).set("feeId3",0);
+                }
+                app.encounterData.at(0).set("qty4",this.qty4);
+                app.encounterData.at(0).set("serviceId4",this.serviceId4);
+                if (this.feeId4 != undefined) {
+                    app.encounterData.at(0).set("feeCode4",app.feeCodes.get(this.feeId4).label);
+                    app.encounterData.at(0).set("feeId4",this.feeId4);
+                }
+                else {
+                    app.encounterData.at(0).set("feeCode4",0);
+                    app.encounterData.at(0).set("feeId4",0);
+                }
+                app.encounterData.at(0).set("qty5",this.qty5);
+                app.encounterData.at(0).set("serviceId5",this.serviceId5);
+                if (this.feeId5 != undefined) {
+                    app.encounterData.at(0).set("feeCode5",app.feeCodes.get(this.feeId5).label);
+                    app.encounterData.at(0).set("feeId5",this.feeId5);
+                }
+                else {
+                    app.encounterData.at(0).set("feeCode5",0);
+                    app.encounterData.at(0).set("feeId5",0);
+                }
             }
             app.encounterData.sync();
-            app.mobileApp.navigate("#calendar");
+            var tabToActivate = $("#demogTab");			//reset the tab before we leave the form
+            $("#tabstrip").data("kendoTabStrip").activateTab(tabToActivate);
+//		this happens after the update is completed
+//	    if (app.calendarData._data.length > 0) {
+//	        app.mobileApp.navigate("#calendar");
+//	    }
+//	    else {
+//	       	app.mobileApp.navigate("#splash");
+//	    }
         },
         findProc: function (e) {
             app.lookup = "procedure";
             app.mobileApp.navigate("#procLookup");
+        },
+        findFeeCode: function (e) {
+            app.lookup = "feecode";
+            if (e.sender.element[0].id == "findFeeCode1") {
+            	app.feeIndex = 1;
+            }
+            else if (e.sender.element[0].id == "findFeeCode2") {
+            	app.feeIndex = 2;
+            }
+            else if (e.sender.element[0].id == "findFeeCode3") {
+            	app.feeIndex = 3;
+            }
+            else if (e.sender.element[0].id == "findFeeCode4") {
+            	app.feeIndex = 4;
+            }
+            else if (e.sender.element[0].id == "findFeeCode5") {
+            	app.feeIndex = 5;
+            }
+            app.mobileApp.navigate("#feeCodeLookup");
         },
         findDisease: function () {
             app.lookup = "disease";
@@ -254,11 +389,6 @@
             app.source = "encounterView";
             app.lookup = "doctor";
             app.mobileApp.navigate("#refLookup");
-        },
-        called: function () {
-            var time = new Date();
-            var disp = (time.getMonth() + 1) + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes();
-            this.set('calledTime', disp);
         },
         start: function () {
             var time = new Date();
@@ -303,14 +433,19 @@
             app.clinicDoctorId = item.id;
             if ($('#encStartTime').data('kendoDateTimePicker').value() != null) {
             	allowCallback(new Date($('#encStartTime').data('kendoDateTimePicker').value()));
-           }
+            }
+            if (item.location > 0) {
+                window.encounterView.set("locationCode", app.locations.get(item.location));
+            }
+            if (item.diseaseCode > 0) {
+                window.encounterView.set("diseaseCode", app.diseases.get(item.diseaseCode).label);
+                window.encounterView.set("diseaseId", app.diseases.get(item.diseaseCode).id);
+            }
         },
         setReferral: function (item) {
             this.set("referral", item.name + " (" +
                 item.msp + ") ");
             this.set('referralId', item.code);
-            $('#filterV').val("");
-            app.filterV();
         },
         setToDay: function (date) {
             var time = new Date(date);
@@ -325,11 +460,24 @@
             $('#toDay').data('kendoDatePicker').max(new Date(year, month, 0));
 
         },
+        setFeeCode: function (item) {
+            var key = "feeCode" + app.feeIndex;
+ 	    this.set(key,item.label);
+ 	    key = "feeId" + app.feeIndex;
+ 	    this.set(key,item.id);
+        },
         cancel: function() {
-            //var tabToActivate = $("#demogTab");			//reset the tab before we leave the form
-            //$("#tabstrip").data("kendoTabStrip").activateTab(tabToActivate);
+            var tabToActivate = $("#demogTab");			//reset the tab before we leave the form
+            $("#tabstrip").data("kendoTabStrip").activateTab(tabToActivate);
             //$('#tabstrip').kendoTabStrip().
-            app.mobileApp.navigate("#calendar");
+	    if (app.calendarData._data.length > 0) {
+	    	var treeview = $("#mainCalendar").data("kendoTreeView")
+	    	treeview.select($());
+	        app.mobileApp.navigate("#calendar");
+	    }
+	    else {
+	       	app.mobileApp.navigate("#splash");
+	    }
         }
     });
 
@@ -345,11 +493,11 @@
                 return;
             }
             if (this.startTime == "") {
-                alert("Activity start date/time is required");
+                alert("Activity start time is required");
                 return;
             }
             if (this.stopTime == "") {
-                alert("Activity stop date/time is required");
+                alert("Activity stop time is required");
                 return;
             }
             if (app.curEvent == 0) {
@@ -372,12 +520,6 @@
                 app.activityData.at(0).set("notes", this.notes);
             }
             app.activityData.sync();
-            app.mobileApp.navigate("#calendar");
-        },
-        called: function () {
-            var time = new Date();
-            var disp = (time.getMonth() + 1) + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes();
-            this.set('calledTime', disp);
         },
         start: function () {
             var time = new Date();
@@ -412,12 +554,22 @@
             this.set('activityTypeId', item.code);
             $('#filterW').val("");
             app.filterW();
+        },
+        cancel: function() {
+	    if (app.calendarData._data.length > 0) {
+	    	var treeview = $("#mainCalendar").data("kendoTreeView")
+	    	treeview.select($());
+	        app.mobileApp.navigate("#calendar");
+	    }
+	    else {
+	       	app.mobileApp.navigate("#splash");
+	    }
         }
     });
 
     window.procView = kendo.observable({
         localProcs: app.localProcs,
-        flipFav: function (e) { // e in this case is an event object
+        flipProc: function (e) { // e in this case is an event object
             var item = e.data;
             var prItem = app.procedures.get(item.code); //Need to update the external source
             if (item.favourite == true) {
@@ -477,11 +629,50 @@
         },
     });
 
+    window.feeCodeView = kendo.observable({
+    	localFeeCodes: app.localFeeCodes,
+        flipFeeCode: function (e) { // e in this case is an event object
+            var item = e.data;
+            var fcItem = app.feeCodes.get(item.code); //Need to update the external source
+            if (item.favourite == true) {
+                item.set("favourite", false);
+                fcItem.set("favourite", false);
+            } else {
+                item.set("favourite", true);
+                fcItem.set("favourite", true);
+            }
+            app.feeCodes.sync();
+            $("#feeCodelist").data("kendoMobileListView").refresh();
+        },
+        setFeeCode: function (e) { //e in this case is an event object
+            var item = e.data;
+            window.encounterView.setFeeCode(item);
+            $('#filterU').val("");
+            app.filterU();
+            app.mobileApp.navigate("#encounter");
+        }
+    });
+
     window.referralView = kendo.observable({
         localDocs: app.localDocs,
+        flipRefDoctor: function (e) { // e in this case is an event object
+            var item = e.data;
+            var rdItem = app.doctors.get(item.code); //Need to update the external source
+            if (item.favourite == true) {
+                item.set("favourite", false);
+                rdItem.set("favourite", false);
+            } else {
+                item.set("favourite", true);
+                rdItem.set("favourite", true);
+            }
+            app.doctors.sync();
+            $("#reflist").data("kendoMobileListView").refresh();
+        },
         setReferral: function (e) { //e in this case is an event object
             var item = e.data;
             window.encounterView.setReferral(item);
+            $('#filterV').val("");
+            app.filterV();
             app.mobileApp.navigate("#encounter");
         }
     });
@@ -526,6 +717,8 @@
         setActivity: function (e) { //e in this case is an event object
             var item = e.data;
             window.activityView.setActivity(item);
+            $('#filterW').val("");
+            app.filterW();
             app.mobileApp.navigate("#activityForm");
         }
     });
