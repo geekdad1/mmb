@@ -59,7 +59,7 @@
             } catch (e) {
                 console.log("no ApiAiPlugin in simulator");
             };
-            app.noop.read();
+            //app.noop.read();
         }, false);
     } else {
         bootstrap();
