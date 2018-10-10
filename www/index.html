@@ -3,27 +3,26 @@
 
 <head>
     <title></title>
-    <meta charset="utf-8">
-    <link href="http://kendo.cdn.telerik.com/2016.1.112/styles/kendo.common.min.css" rel="stylesheet" >
-    <link href="http://kendo.cdn.telerik.com/2016.1.112/styles/kendo.rtl.min.css" rel="stylesheet" >
-    <link href="http://kendo.cdn.telerik.com/2016.1.112/styles/kendo.default.min.css" rel="stylesheet" >
-    <link href="http://kendo.cdn.telerik.com/2016.1.112/styles/kendo.mobile.all.min.css" rel="stylesheet">
-    <link href="styles/main.css" rel="stylesheet" >
-
-    <script src="cordova.js"></script>
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="http://kendo.cdn.telerik.com/2016.1.112/js/angular.min.js"></script>
-    <script src="http://kendo.cdn.telerik.com/2016.1.112/js/jszip.min.js"></script>
-    <script src="http://kendo.cdn.telerik.com/2016.1.112/js/kendo.all.min.js"></script>
-    <script src="kendo/js/kendo.progressbar.min.js"></script>
-    <script src="/scripts/app.js"></script>
+    <meta charset="utf-8" />
+    <!-- Common Kendo UI CSS for web and dataviz widgets -->
+    <link href="kendo/styles/kendo.common.min.css" rel="stylesheet" />
+    <!-- Default Kendo UI theme CSS for web and dataviz widgets -->
+    <link href="kendo/styles/kendo.default.min.css" rel="stylesheet" />
+    <!-- (optional) Kendo UI Mobile CSS, include only if you will use the mobile devices features -->
+    <link href="kendo/styles/kendo.default.mobile.min.css" rel="stylesheet" type="text/css" />
+    <link href="components/css/mmb.css" rel="stylesheet" />
+    <script src="kendo/js/jquery.min.js"></script>
+    <script src="kendo/js/kendo.all.min.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="java/checkPHN.js"></script>
 </head>
 
-<body id="kendoUiMobileApp">
+<body id="kendoUiMobileApp" onContextMenu='return false'>
     <script src="components/home/index.js"></script>
     <div data-role="layout" data-id="login">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title">Medinet</span>
             </div>
         </header>
@@ -38,6 +37,7 @@
     <div data-role="layout" data-id="register">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title">Medinet</span>
             </div>
         </header>
@@ -52,6 +52,7 @@
     <div data-role="layout" data-id="resetpw">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title">Medinet</span>
             </div>
         </header>
@@ -66,6 +67,7 @@
     <div data-role="layout" data-id="main">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title">Medinet</span>
             </div>
         </header>
@@ -78,6 +80,7 @@
     <div data-role="layout" data-id="main-nonav">
         <header data-role="header">
             <div data-role="navbar">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -88,131 +91,181 @@
     <div data-role="layout" data-id="calendarLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color: #023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
         <footer data-role="footer" style="background-color:#023A60;color:white">
             <div>
-            	<button style="width:33%;background-color:#023A60" data-role="button" onClick="app.submitPlus()"><img src="components/images/paid.png">
-            	</button>
-                <a style="background-color:#023A60" onClick="document.location.href='https://admin.medinet.ca/mmb';" data-role="button">Log Off</a>
-<!-- optional color #34617F -->
-                <button style="width: 33%;background-color:#023A60" data-role="button" onClick="app.submitMinus()"><img src="components/images/unpaid.png">
-    	        </button>
+            	<table border=0 width=100%>
+            	<tr>
+            	<td style="text-align:left">
+            		<a data-role="button" onClick="app.submitPlus()">Claim</a>
+            	</td>
+            	<td style="text-align:center">
+                	<a onClick="document.location.href='https://mmb.medinet.ca';" data-role="button">Log Off</a>
+                </td>
+                <td style="text-align:right">
+                	<a data-role="button" onClick="app.submitMinus()">Activity</a>
+                </td>
+                </tr>
+                </table>
+            </div>
+        </footer>
+    </div>
+    <div data-role="layout" data-id="splashLayout">
+        <header data-role="header">
+            <div data-role="navbar" style="background-color: #023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <span data-role="view-title">Medinet Mobile Billing</span>
+            </div>
+        </header>
+        <footer data-role="footer" style="background-color:#023A60;color:white">
+            <div>
+            	<table border=0 width=100%>
+            	<tr>
+            	<td style="text-align:left">
+            		<a data-role="button" onClick="app.submitPlus()">Claim</a>
+            	</td>
+            	<td style="text-align:center">
+                	<a onClick="document.location.href='https://mmb.medinet.ca';" data-role="button">Log Off</a>
+                </td>
+                <td style="text-align:right">
+                	<a data-role="button" onClick="app.submitMinus()">Activity</a>
+                </td>
+                </tr>
+                </table>
             </div>
         </footer>
     </div>
     <div data-role="layout" data-id="encounterLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
         <footer data-role="footer" style="background-color:#023A60;color:white">
-            <!-- <a href="#calendar" data-role="button">
-                Cancel</a> -->
-            <a onClick="javascript:window.encounterView.cancel();" data-role="button" style="background-color:#023A60"><img src="components/images/cancel.png"></a>
+            <a onClick="javascript:window.encounterView.cancel();" data-role="button">Cancel</a>
             <div style="float:right">
-                <a onClick="javascript:window.encounterView.submit();" data-role="button"><img src="components/images/save.png"></a>
+                <a onClick="javascript:window.encounterView.submit();" data-role="button">Save</a>
             </div>
         </footer>
     </div>
     <div data-role="layout" data-id="activityLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
         <footer data-role="footer" style="background-color:#023A60;color:white">
-            <a href="#calendar" data-role="button" class="mmb-cancel" ><img src="components/images/cancel.png">
-                </a>
+            <a onClick="javascript:window.activityView.cancel();" data-role="button">Cancel</a>
             <div style="float:right">
-                <a onClick="javascript:window.activityView.submit();" data-role="button"><img src="components/images/save.png">
-                </a>
+                <a onClick="javascript:window.activityView.submit();" data-role="button">Save</a>
             </div>
         </footer>
     </div>
     <div data-role="layout" data-id="procSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
         <footer data-role="footer" style="background-color:#023A60;color:white">
-            <div style="width:80%;float:left;height:35px;padding-left:10px;padding-top:10px">
+            <div style="width:83%;float:left;height:35px;padding-left:10px;padding-top:10px">
                 <input type="text" id="filterX" onkeyup="app.filterX();" placeholder="Search" style="font-size:1.1em;width:70%">
             </div>
-            <button data-role="button" onClick="app.filterFav()">
-                <img id="filterFav" src="components/images/grey.jpg">
+            <button data-role="button" onClick="app.filterFav()" style="background-color:#023A60">
+                <img id="filterProcFav" src="components/images/grey.png">
             </button>
-    </div>
-    </footer>
+        </footer>
     </div>
     <div data-role="layout" data-id="disSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
         <footer data-role="footer" style="background-color:#023A60;color:white">
-            <div style="width:80%;float:left;height:35px;padding-left:10px;padding-top:10px">
+            <div style="width:83%;float:left;height:35px;padding-left:10px;padding-top:10px">
                 <input type="text" id="filterY" onkeyup="app.filterY();" placeholder="Search" style="font-size:1.1em;width:70%">
             </div>
-            <button data-role="button" onClick="app.filterFav()">
-                <img id="filterFav" src="components/images/grey.jpg">
+            <button data-role="button" onClick="app.filterFav()" style="background-color:#023A60">
+                <img id="filterDisFav" src="components/images/grey.png">
             </button>
-    </div>
-    </footer>
+        </footer>
     </div>
     <div data-role="layout" data-id="docSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
         <footer data-role="footer" style="background-color:#023A60;color:white">
-            <div style="width:80%;float:left;height:35px;padding-left:10px;padding-top:10px">
+            <div style="width:83%;float:left;height:35px;padding-left:10px;padding-top:10px">
                 <input type="text" id="filterZ" onkeyup="app.filterZ();" placeholder="Search" style="font-size:1.1em;width:70%">
             </div>
-            <button data-role="button" onClick="app.filterFav()">
-                <img id="filterFav" src="components/images/grey.jpg">
+            <button data-role="button" onClick="app.filterFav()" style="background-color:#023A60">
+                <img id="filterDocFav" src="components/images/grey.png">
             </button>
+        </footer>
+    </div>
+    <div data-role="layout" data-id="feeCodeSearchLayout">
+        <header data-role="header">
+            <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+        <footer data-role="footer" style="background-color:#023A60;color:white">
+            <div style="width:83%;float:left;height:35px;padding-left:10px;padding-top:10px">
+                <input type="text" id="filterU" onkeyup="app.filterU();" placeholder="Search" style="font-size:1.1em;width:70%">
+            </div>
+            <button data-role="button" onClick="app.filterFav()" style="background-color:#023A60">
+                <img id="filterFeeFav" src="components/images/grey.png">
+            </button>
+        </footer>
     </div>
     <div data-role="layout" data-id="actSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
         <footer data-role="footer" style="background-color:#023A60;color:white">
-            <div style="width:80%;float:left;height:35px;padding-left:10px;padding-top:10px">
-                <input type="text" id="filterW" onkeyup="app.filterW();" placeholder="Search" style="font-size:1.1em;width:70%">
+            <div style="width:83%;float:left;height:35px;padding-left:10px;padding-top:10px">
+                <input type="text" id="filterW" onkeyup="app.filterW(this);" placeholder="Search" style="font-size:1.1em;width:70%">
             </div>
-            <button data-role="button" onClick="app.filterFav()">
-                <img id="filterFav" src="components/images/grey.jpg">
+            <button data-role="button" onClick="app.filterFav()" style="background-color:#023A60">
+                <img id="filterActFav" src="components/images/grey.png">
             </button>
+        </footer>
     </div>
     <div data-role="layout" data-id="refSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
         <footer data-role="footer" style="background-color:#023A60;color:white">
-	        <div style="float:left">
-                <a onClick="app.mobileApp.navigate('#:back');"><img src="components/images/cancel.png"></a>
-    	    </div>
-            <div style="width:60%;height:35px;padding-left:30px;padding-top:10px;text-align:center">
-                <input type="text" id="filterV" onkeyup="app.filterV();" placeholder="Search Doc" style="font-size:1.1em;width:70%">
+            <div style="width:83%;float:left;height:35px;padding-left:10px;padding-top:10px">
+                <input type="text" id="filterV" onkeyup="app.filterV();" placeholder="Search" style="font-size:1.1em;width:70%">
             </div>
-    </div>
-    </footer>
+            <button data-role="button" onClick="app.filterFav()" style="background-color:#023A60">
+                <img id="filterRefFav" src="components/images/grey.png">
+            </button>
+        </footer>
     </div>
     <!-- START_CUSTOM_CODE_kendoUiMobileApp -->
     <script>
     </script>
     <!-- END_CUSTOM_CODE_kendoUiMobileApp -->
 </body>
-
 
 </html>
