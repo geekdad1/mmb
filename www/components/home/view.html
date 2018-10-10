@@ -469,10 +469,11 @@
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         <script>
                             function fee1Change() {
+                            	var code = ("00" + $('#feeCode1').val()).slice(-5);
                                 app.localFeeCodes.filter({
                                     field: "label",
                                     operator: "eq",
-                                    value: $('#feecode1').val()
+                                    value: code
                                 });
                                 var view = app.localFeeCodes.view();
                                 if (view.length == 0) {
@@ -484,7 +485,7 @@
                                 }
                             };
                         </script>
-                        <input id="feecode1" onChange="javascript:fee1Change();" name="feecode1" data-bind="value:feeCode1" class="k-input k-textbox" placeholder="FeeCode" style="width:70%;font-size:1.0em" />
+                        <input id="feeCode1" onChange="javascript:fee1Change();" name="feecode1" data-bind="value:feeCode1" class="k-input k-textbox" placeholder="FeeCode" style="width:70%;font-size:1.0em" />
                         <button id="findFeeCode1" data-role="button" data-bind="click: findFeeCode">
                             <span class="k-icon k-i-search"></span>
                         </button>
@@ -510,16 +511,18 @@
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         <script>
                             function fee2Change() {
+                            	var code = ("00" + $('#feeCode2').val()).slice(-5);
                                 app.localFeeCodes.filter({
                                     field: "label",
                                     operator: "eq",
-                                    value: $('#feecode2').val()
+                                    value: code
                                 });
                                 var view = app.localFeeCodes.view();
                                 if (view.length == 0) {
                                     alert("That is not a valid fee code");
                                 } else {
-                                    window.encounterView.set("feeCode2", view[0].code);
+                                    window.encounterView.set("feeCode2", view[0].label);
+                                    window.encounterView.set("feeId2", view[0].code);
                                     app.localFeeCodes.filter({});
                                 }
                             };
@@ -550,16 +553,18 @@
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         <script>
                             function fee3Change() {
+                            	var code = ("00" + $('#feeCode3').val()).slice(-5);
                                 app.localFeeCodes.filter({
                                     field: "label",
                                     operator: "eq",
-                                    value: $('#feecode3').val()
+                                    value: code
                                 });
                                 var view = app.localFeeCodes.view();
                                 if (view.length == 0) {
                                     alert("That is not a valid fee code");
                                 } else {
-                                    window.encounterView.set("feeCode3", view[0].code);
+                                    window.encounterView.set("feeCode3", view[0].label);
+                                    window.encounterView.set("feeId3", view[0].code);
                                     app.localFeeCodes.filter({});
                                 }
                             };
@@ -590,16 +595,18 @@
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         <script>
                             function fee4Change() {
+                            	var code = ("00" + $('#feeCode4').val()).slice(-5);
                                 app.localFeeCodes.filter({
                                     field: "label",
                                     operator: "eq",
-                                    value: $('#feecode4').val()
+                                    value: code
                                 });
                                 var view = app.localFeeCodes.view();
                                 if (view.length == 0) {
                                     alert("That is not a valid fee code");
                                 } else {
-                                    window.encounterView.set("feeCode4", view[0].code);
+                                    window.encounterView.set("feeCode4", view[0].label);
+                                    window.encounterView.set("feeId4", view[0].code);
                                     app.localFeeCodes.filter({});
                                 }
                             };
@@ -630,16 +637,18 @@
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         <script>
                             function fee5Change() {
+                            	var code = ("00" + $('#feeCode5').val()).slice(-5);
                                 app.localFeeCodes.filter({
                                     field: "label",
                                     operator: "eq",
-                                    value: $('#feecode5').val()
+                                    value: code
                                 });
                                 var view = app.localFeeCodes.view();
                                 if (view.length == 0) {
                                     alert("That is not a valid fee code");
                                 } else {
-                                    window.encounterView.set("feeCode5", view[0].code);
+                                    window.encounterView.set("feeCode5", view[0].label);
+                                    window.encounterView.set("feeId5", view[0].code);
                                     app.localFeeCodes.filter({});
                                 }
                             };
