@@ -1,0 +1,21 @@
+body {
+}
+list-base {
+    background-color:#ffffff;
+}
+list-alt {
+    background-color:#CCFFFF;
+}
+.mmb-paid {
+    background-image:url("/components/images/paid.ico")
+}
+.mmb-unpaid {
+    background-image:url("/component/images/unpaid.ico")
+}
+.mmb-save {
+    background-image:url("/component/images/save.ico");
+}
+.mmb-cancel {
+    background-image:url("/component/images/cancel.ico");
+  
+}
