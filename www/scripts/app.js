@@ -19,24 +19,6 @@
                 layout: 'main'
             });
         });
-             try {
-
-		alert("initializing apiAiPlugin");
-                ApiAIPlugin.init({
-                        subscriptionKey: "ca5d8bc3-a7a3-4b5d-93c4-7fe154d77999",
-                        clientAccessToken: "8d31960ba8df459d859e4e46c178fab5",
-                        lang: "en"
-                    },
-                    function (result) {
-                        console.log("worked");
-                    },
-                    function (error) {
-                        console.log("failed");
-                    });
-            } catch (e) {
-		alert(e);
-                console.log("no ApiAiPlugin in simulator");
-            };
     };
 
     if (window.cordova) {
@@ -61,16 +43,18 @@
                 }
             }
 
-alert("running bootstrap");
-	    bootstrap();
-		recognition = new SpeechRecognition();
-		recognition.onresult = function(event) {
-			if (event.results.length > 0) {
-				q.value = event.results[0][0].transcript;
-				q.form.submit();
-			}
-		}
-        try {
+            bootstrap();
+            
+	    var options = {
+	    	lang: "en-US",
+	    	showPopup: true
+	    }
+	    var useSpeech = false;
+	    
+	    window.plugins.speechRecognition.isRecognitionAvailable(
+	    	function(result) { useSpeech = result }, function(err) { useSpeech = false; alert(err); });
+	    alert ("useSpeech " + useSpeech);	
+            try {
                 ApiAIPlugin.init({
                         subscriptionKey: "ca5d8bc3-a7a3-4b5d-93c4-7fe154d77999",
                         clientAccessToken: "8d31960ba8df459d859e4e46c178fab5",
@@ -91,6 +75,14 @@ alert("running bootstrap");
         bootstrap();
     }
 
+    app.speech = function recognize() {
+    	window.plugins.speechRecognition.startListening(
+    	function(result) {
+    		alert(result);
+    	}, function(err) {
+    		alert(err);
+    	}, options);
+    };
     app.sendVoice = function sendVoice() {
         try {
             ApiAIPlugin.requestVoice({
@@ -2188,7 +2180,10 @@ function isHoliday(date) {
         app.holiday = false;
         return;
     }
-    if (app.holidays.get(date) === undefined) {
+    var day = ("0" + date.getDate()).slice(-2);
+    var month = ("0" + (date.getMonth()+1)).slice(-2);
+    var key = date.getFullYear() + "-" + month + "-" + day;
+    if (app.holidays.get(key) === undefined) {
         app.holiday = false;
     } else {
         app.hoiday = true;
