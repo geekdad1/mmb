@@ -20,7 +20,7 @@
             });
         });
     };
-
+	alert("got here");
     if (window.cordova) {
 	alert("Does cordova go here!");
 	    // this function is called by Cordova when the application is loaded by the device
