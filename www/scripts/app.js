@@ -19,6 +19,21 @@
                 layout: 'main'
             });
         });
+             try {
+                ApiAIPlugin.init({
+                        subscriptionKey: "ca5d8bc3-a7a3-4b5d-93c4-7fe154d77999",
+                        clientAccessToken: "8d31960ba8df459d859e4e46c178fab5",
+                        lang: "en"
+                    },
+                    function (result) {
+                        console.log("worked");
+                    },
+                    function (error) {
+                        console.log("failed");
+                    });
+            } catch (e) {
+                console.log("no ApiAiPlugin in simulator");
+            };
     };
 
     if (window.cordova) {
