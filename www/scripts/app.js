@@ -21,18 +21,16 @@
         });
     };
 	alert("got here");
-    if (window.cordova) {
-	alert("Does cordova go here!");
 	    // this function is called by Cordova when the application is loaded by the device
-        document.addEventListener('deviceready', function () {
+    document.addEventListener('deviceready', function () {
             // hide the splash screen as soon as the app is ready. otherwise
             // Cordova will wait 5 very long seconds to do it for you.
-            if (navigator && navigator.splashscreen) {
-                navigator.splashscreen.hide();
-            }
+    	if (navigator && navigator.splashscreen) {
+        	navigator.splashscreen.hide();
+    	}
 
-            var element = document.getElementById('appDrawer');
-            if (typeof (element) != 'undefined' && element != null) {
+        var element = document.getElementById('appDrawer');
+        if (typeof (element) != 'undefined' && element != null) {
                 if (window.navigator.msPointerEnabled) {
                     $("#navigation-container").on("MSPointerDown", "a", function (event) {
                         app.keepActiveState($(this));
@@ -42,9 +40,9 @@
                         app.keepActiveState($(this));
                     });
                 }
-            }
+        }
 
-            bootstrap();
+        bootstrap();
             
 	    var options = {
 	    	lang: "en-US",
@@ -55,28 +53,9 @@
 	    window.plugins.speechRecognition.isRecognitionAvailable(
 	    	function(result) { useSpeech = result }, function(err) { useSpeech = false; alert(err); });
 	    alert ("useSpeech " + useSpeech);	
-            try {
-                ApiAIPlugin.init({
-                        subscriptionKey: "ca5d8bc3-a7a3-4b5d-93c4-7fe154d77999",
-                        clientAccessToken: "8d31960ba8df459d859e4e46c178fab5",
-                        lang: "en"
-                    },
-                    function (result) {
-                        console.log("worked");
-                    },
-                    function (error) {
-                        console.log("failed");
-                    });
-            } catch (e) {
-                console.log("no ApiAiPlugin in simulator");
-            };
-            //app.noop.read();
-        }, false);
-    } else {
-        bootstrap();
-    }
+    }, false);
 
-    app.speech = function recognize() {
+	app.speech = function recognize() {
     	window.plugins.speechRecognition.startListening(
     	function(result) {
     		alert(result);
