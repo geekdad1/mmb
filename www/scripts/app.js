@@ -43,8 +43,10 @@
                 }
             }
 
-            bootstrap();
+alert("running bootstrap");
+	    bootstrap();
              try {
+alert("initializing apiaiplugin");
                 ApiAIPlugin.init({
                         subscriptionKey: "ca5d8bc3-a7a3-4b5d-93c4-7fe154d77999",
                         clientAccessToken: "8d31960ba8df459d859e4e46c178fab5",
