@@ -20,6 +20,7 @@
             });
         });
              try {
+alert("initializing apiAiPlugin");
                 ApiAIPlugin.init({
                         subscriptionKey: "ca5d8bc3-a7a3-4b5d-93c4-7fe154d77999",
                         clientAccessToken: "8d31960ba8df459d859e4e46c178fab5",
@@ -32,6 +33,7 @@
                         console.log("failed");
                     });
             } catch (e) {
+		alert(e);
                 console.log("no ApiAiPlugin in simulator");
             };
     };
