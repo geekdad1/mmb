@@ -19,40 +19,6 @@
 alert("running bootstrap");
 	        bootstrap();
             
-            // hide the splash screen as soon as the app is ready. otherwise
-            // Cordova will wait 5 very long seconds to do it for you.
-    		if (navigator && navigator.splashscreen) {
-        		navigator.splashscreen.hide();
-    		}
-
-	    	var options = {
-		    	lang: "en-US",
-		    	showPopup: true
-	    	}
-	    	var useSpeech = false;
-alert("checking speech");	    
-	    	window.plugins.speechRecognition.isRecognitionAvailable(
-	    		function(result) { 
-					useSpeech = result 
-				}, 
-				function(err) { 
-					useSpeech = false; alert(err);
-				});
-alert ("useSpeech " + useSpeech);	
-			}, false);
-		    // this function is called by Cordova when the application is loaded by the device
-    	    var element = document.getElementById('appDrawer');
-        	if (typeof (element) != 'undefined' && element != null) {
-           	    if (window.navigator.msPointerEnabled) {
-               	    $("#navigation-container").on("MSPointerDown", "a", function (event) {
-                   	    app.keepActiveState($(this));
-	                   });
-    	        } else {
-                    $("#navigation-container").on("touchstart", "a", function (event) {
-           	            app.keepActiveState($(this));
-               	    });
-	            }
-    	    }
 		},
 
     	// Update DOM on a Received Event
