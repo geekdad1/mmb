@@ -41,7 +41,7 @@
                     });
                 }
         }
-
+alert("running bootstrap");
         bootstrap();
             
 	    var options = {
@@ -49,12 +49,12 @@
 	    	showPopup: true
 	    }
 	    var useSpeech = false;
-	    
+alert("checking speech");	    
 	    window.plugins.speechRecognition.isRecognitionAvailable(
 	    	function(result) { useSpeech = result }, function(err) { useSpeech = false; alert(err); });
 	    alert ("useSpeech " + useSpeech);	
     }, false);
-
+alert("recognize function");
 	app.speech = function recognize() {
     	window.plugins.speechRecognition.startListening(
     	function(result) {
