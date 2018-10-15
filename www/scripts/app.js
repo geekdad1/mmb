@@ -4,6 +4,66 @@
     var app = {
         data: {}
     };
+    var cord = {
+	    // Application Constructor
+	    initialize: function() {
+    	    document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+	    },
+
+	    // deviceready Event Handler
+    	//
+    	// Bind any cordova events here. Common events are:
+    	// 'pause', 'resume', etc.
+    	onDeviceReady: function() {
+	        this.receivedEvent('deviceready');
+alert("running bootstrap");
+	        bootstrap();
+            
+            // hide the splash screen as soon as the app is ready. otherwise
+            // Cordova will wait 5 very long seconds to do it for you.
+    		if (navigator && navigator.splashscreen) {
+        		navigator.splashscreen.hide();
+    		}
+
+	    	var options = {
+		    	lang: "en-US",
+		    	showPopup: true
+	    	}
+	    	var useSpeech = false;
+alert("checking speech");	    
+	    	window.plugins.speechRecognition.isRecognitionAvailable(
+	    		function(result) { 
+					useSpeech = result 
+				}, 
+				function(err) { 
+					useSpeech = false; alert(err);
+				});
+alert ("useSpeech " + useSpeech);	
+			}, false);
+		    // this function is called by Cordova when the application is loaded by the device
+    	    var element = document.getElementById('appDrawer');
+        	if (typeof (element) != 'undefined' && element != null) {
+           	    if (window.navigator.msPointerEnabled) {
+               	    $("#navigation-container").on("MSPointerDown", "a", function (event) {
+                   	    app.keepActiveState($(this));
+	                   });
+    	        } else {
+                    $("#navigation-container").on("touchstart", "a", function (event) {
+           	            app.keepActiveState($(this));
+               	    });
+	            }
+    	    }
+		},
+
+    	// Update DOM on a Received Event
+    	receivedEvent: function(id) {
+        	var parentElement = document.getElementById(id);
+        	var listeningElement = parentElement.querySelector('.listening');
+        	var receivedElement = parentElement.querySelector('.received');
+        	console.log('Received Event: ' + id);
+    	}
+	};
+	    
     var bootstrap = function () {
         $(function () {
             app.mobileApp = new kendo.mobile.Application(document.body, {
@@ -21,39 +81,6 @@
         });
     };
 	alert("got here");
-	    // this function is called by Cordova when the application is loaded by the device
-    document.addEventListener('deviceready', function () {
-            // hide the splash screen as soon as the app is ready. otherwise
-            // Cordova will wait 5 very long seconds to do it for you.
-    	if (navigator && navigator.splashscreen) {
-        	navigator.splashscreen.hide();
-    	}
-
-        var element = document.getElementById('appDrawer');
-        if (typeof (element) != 'undefined' && element != null) {
-                if (window.navigator.msPointerEnabled) {
-                    $("#navigation-container").on("MSPointerDown", "a", function (event) {
-                        app.keepActiveState($(this));
-                    });
-                } else {
-                    $("#navigation-container").on("touchstart", "a", function (event) {
-                        app.keepActiveState($(this));
-                    });
-                }
-        }
-alert("running bootstrap");
-        bootstrap();
-            
-	    var options = {
-	    	lang: "en-US",
-	    	showPopup: true
-	    }
-	    var useSpeech = false;
-alert("checking speech");	    
-	    window.plugins.speechRecognition.isRecognitionAvailable(
-	    	function(result) { useSpeech = result }, function(err) { useSpeech = false; alert(err); });
-	    alert ("useSpeech " + useSpeech);	
-    }, false);
 alert("recognize function");
 	app.speech = function recognize() {
     	window.plugins.speechRecognition.startListening(
