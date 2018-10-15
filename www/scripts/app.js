@@ -52,6 +52,16 @@ alert("running bootstrap");
 	alert("got here");
 	cord.initialize();
 	bootstrap();
+	alert("speech init " + window.plugins.speechRecognition);
+	window.plugins.speechRecognition.isRecognitionAvailable(
+    		function(result) { 
+			useSpeech = result ; alert("speech");
+		}, 
+		function(err) { 
+			useSpeech = false; alert(err);
+		}
+	);
+		
 
 alert("recognize function");
 	app.speech = function recognize() {
