@@ -55,7 +55,8 @@ alert("running bootstrap");
 
 alert("recognize function");
 	app.speech = function recognize() {
-    	window.plugins.speechRecognition.startListening(
+	alert("speech " + window.plugins);
+	window.plugins.speechRecognition.startListening(
     	function(result) {
     		alert(result);
     	}, function(err) {
