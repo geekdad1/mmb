@@ -81,6 +81,8 @@ alert ("useSpeech " + useSpeech);
         });
     };
 	alert("got here");
+	cord.initialize();
+
 alert("recognize function");
 	app.speech = function recognize() {
     	window.plugins.speechRecognition.startListening(
@@ -125,6 +127,7 @@ alert("recognize function");
                 data: {
                     token: function () {
                         return app.appToken;
+						
                     },
                     userKey: function () {
                         return app.userKey;
