@@ -27,7 +27,8 @@
             }
         },
         "platforms": [
-            "ios"
+            "ios",
+            "android"
         ]
     }
 }
