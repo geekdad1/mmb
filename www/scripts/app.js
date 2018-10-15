@@ -51,6 +51,7 @@ alert("running bootstrap");
     };
 	alert("got here");
 	cord.initialize();
+	bootstrap();
 
 alert("recognize function");
 	app.speech = function recognize() {
