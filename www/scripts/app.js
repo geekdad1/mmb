@@ -19,7 +19,6 @@ alert("adding event listener");
     	onDeviceReady: function() {
 alert("device ready");
 		this.receivedEvent('deviceready');
-alert("running bootstrap");
 	        bootstrap();
             
 		},
@@ -35,6 +34,7 @@ alert("running bootstrap");
 	    
     var bootstrap = function () {
         $(function () {
+alert("running bootstrap");
             app.mobileApp = new kendo.mobile.Application(document.body, {
 
                 // you can change the default transition (slide, zoom or fade)
@@ -48,6 +48,7 @@ alert("running bootstrap");
                 layout: 'main'
             });
         });
+alert ("bootstrap complete");
     };
 	alert("got here");
 	cord.initialize();
