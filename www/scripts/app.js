@@ -7,7 +7,9 @@
     var cord = {
 	    // Application Constructor
 	    initialize: function() {
-    	    document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+alert("adding event listener");
+		    
+		    document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
 	    },
 
 	    // deviceready Event Handler
