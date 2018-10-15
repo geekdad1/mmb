@@ -15,7 +15,8 @@
     	// Bind any cordova events here. Common events are:
     	// 'pause', 'resume', etc.
     	onDeviceReady: function() {
-	        this.receivedEvent('deviceready');
+alert("device ready");
+		this.receivedEvent('deviceready');
 alert("running bootstrap");
 	        bootstrap();
             
@@ -58,6 +59,7 @@ alert("recognize function");
     		alert(err);
     	}, options);
     };
+alert("sendVoice");
     app.sendVoice = function sendVoice() {
         try {
             ApiAIPlugin.requestVoice({
@@ -78,6 +80,7 @@ alert("recognize function");
         }
     };
 
+alert("keep active state");
     app.keepActiveState = function _keepActiveState(item) {
         var currentItem = item;
         $("#navigation-container li a.active").removeClass("active");
@@ -581,7 +584,7 @@ alert("recognize function");
             }
         }
     });
-
+alert ("set variables");
     app.appToken = "";
     app.userKey = "";
     app.source = "";
