@@ -15,7 +15,7 @@
         "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-media": "git+https://github.com/apache/cordova-plugin-media.git#f0a6d4512002176adae1a7cc4d58b6d6a0b06722",
-        "cordova-plugin-speechrecognition": "https://registry.npmjs.org/cordova-plugin-speechrecognition/-/cordova-plugin-speechrecognition-1.2.0.tgz"
+        "cordova-plugin-speechrecognition": "1.2.0"
         },
         "xcodebuild": "^1.0.2"
     },
