@@ -47,7 +47,7 @@ alert("running bootstrap");
                 statusBarStyle: 'black-translucent',
                 layout: 'main'
             });
-			alert("speech init " + window.plugins.speechRecognition);
+			alert("speech init ");
 			window.plugins.speechRecognition.isRecognitionAvailable(
    		 		function(result) { 
 					useSpeech = result ; alert("speech");
