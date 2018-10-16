@@ -47,21 +47,21 @@ alert("running bootstrap");
                 statusBarStyle: 'black-translucent',
                 layout: 'main'
             });
-        });
+			alert("speech init " + window.plugins.speechRecognition);
+			window.plugins.speechRecognition.isRecognitionAvailable(
+   		 		function(result) { 
+					useSpeech = result ; alert("speech");
+				}, 
+				function(err) { 
+					useSpeech = false; alert(err);
+				}
+			);
 alert ("bootstrap complete");
+        });
     };
 	alert("got here");
 	cord.initialize();
 	bootstrap();
-	alert("speech init " + window.plugins.speechRecognition);
-	window.plugins.speechRecognition.isRecognitionAvailable(
-    		function(result) { 
-			useSpeech = result ; alert("speech");
-		}, 
-		function(err) { 
-			useSpeech = false; alert(err);
-		}
-	);
 		
 
 alert("recognize function");
@@ -74,7 +74,7 @@ alert("recognize function");
     		alert(err);
     	}, options);
     };
-
+	
 alert("keep active state");
     app.keepActiveState = function _keepActiveState(item) {
         var currentItem = item;
