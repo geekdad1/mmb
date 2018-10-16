@@ -74,26 +74,6 @@ alert("recognize function");
     		alert(err);
     	}, options);
     };
-alert("sendVoice");
-    app.sendVoice = function sendVoice() {
-        try {
-            ApiAIPlugin.requestVoice({
-                    contexts: ['phn']
-                },
-                function (response) {
-                    //               alert(JSON.stringify(response));
-                    window.encounterView.set("phn", response.result.parameters.number);
-                    if (response.result.parameters.number.length == 10) {
-                        app.findPHN();
-                    }
-                },
-                function (error) {
-                    alert("Please try again");
-                });
-        } catch (e) {
-            alert(e);
-        }
-    };
 
 alert("keep active state");
     app.keepActiveState = function _keepActiveState(item) {
