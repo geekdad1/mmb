@@ -48,7 +48,7 @@ alert("running bootstrap");
                 layout: 'main'
             });
 			alert("speech init ");
-			speechRecognition.isRecognitionAvailable(
+			window.plugins.speechRecognition.isRecognitionAvailable(
    		 		function(result) { 
 					useSpeech = result ; alert("speech");
 				}, 
@@ -56,6 +56,7 @@ alert("running bootstrap");
 					useSpeech = false; alert(err);
 				}
 			);
+			alert("done speech init");
 alert ("bootstrap complete");
         });
     };
