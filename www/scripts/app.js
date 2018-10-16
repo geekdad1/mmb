@@ -48,7 +48,7 @@ alert("running bootstrap");
                 layout: 'main'
             });
 			alert("speech init ");
-			window.plugins.speechRecognition.isRecognitionAvailable(
+			speechRecognition.isRecognitionAvailable(
    		 		function(result) { 
 					useSpeech = result ; alert("speech");
 				}, 
@@ -66,7 +66,7 @@ alert ("bootstrap complete");
 
 alert("recognize function");
 	app.speech = function recognize() {
-	alert("speech " + window.plugins);
+	alert("speech start listening");
 	window.plugins.speechRecognition.startListening(
     	function(result) {
     		alert(result);
