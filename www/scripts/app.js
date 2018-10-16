@@ -50,10 +50,10 @@ alert("running bootstrap");
 			alert("speech init ");
 			window.plugins.speechRecognition.isRecognitionAvailable(
    		 		function(result) { 
-					useSpeech = result ; alert("speech");
+					alert("speech works");
 				}, 
 				function(err) { 
-					useSpeech = false; alert(err);
+					alert("speech fails");
 				}
 			);
 			alert("done speech init");
