@@ -2265,6 +2265,7 @@ function checkError(e) {
         } else if (e.errorThrown == "bad gateway") {
             alert("Program error.  Please contact Medinet for support");
         } else {
+alert(e.errorThrown);
             alert(e.errors);
         }
     }
