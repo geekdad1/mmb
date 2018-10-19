@@ -625,12 +625,13 @@
             }
         },
         error: function (e) {
-            checkError(e);
+alert("Running check error for appTokenData");            
+		checkError(e);
+	alert("check over");
             $('#progressbar').fadeOut("fast");
         },
         requestEnd: function (e) {
 		alert(e.sender.options.transport.read.url);
-		alert(e.response);
             if (e.response === undefined) {
                 return;
             }
