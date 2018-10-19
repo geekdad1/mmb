@@ -20,7 +20,7 @@
         <script>
             $("#progressbar").kendoProgressBar({
                 min: 0,
-                max: 12,
+                max: 13,
                 value: 0,
                 showStatus: false,
                 complete: function () {
@@ -121,8 +121,8 @@
                     if (this.dataSource.getByUid(e.node.dataset.uid).type == "paid") {
                         app.encounterData.read();
                         app.mobileApp.navigate("#encounter");
-                        $("#addenc").fadeOut("fast");
-                        $("#updenc").fadeIn("fast");
+ ///dp                       $("#addenc").fadeOut("fast");
+ ///dp                       $("#updenc").fadeIn("fast");
                     } else if (this.dataSource.getByUid(e.node.dataset.uid).type == "unpaid") {
                         app.activityData.read();
                         app.mobileApp.navigate("#activityForm");
@@ -155,83 +155,97 @@
                 <div style="height:400px">
                     <div style="height:20px;width:100%">
                     </div>
-                    <div id="addenc">
-                        <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                            <input id="provCode" data-bind="value: provCode">
-                            <script>
-                                $(document).ready(function () {
-                                    $("#provCode").kendoDropDownList({
-                                        autoBind: false,
-                                        valuePrimitive: false,
-                                        dataValueField: "code",
-                                        dataTextField: "description",
-                                        dataSource: app.provinces,
-                                        index: 1,
-                                        change: function () {
-                                            var dropdownlist = $("#provCode").data("kendoDropDownList");
-                                            var dataItem = dropdownlist.dataItem();
+                    <div id="addr" style="display:none">
+						<div style="width:90%;padding-left:10px;padding-bottom:10px">
+                          <input type="text" id="street1" name="street1" class="k-textbox" data-bind="value: street1" placeholder="street" style="font-size:1.1em;width:100%">
+						</div>
+						<div style="width:90%;padding-left:10px;padding-bottom:10px">
+                          <input type="text" id="street2" name="street2" class="k-textbox" data-bind="value: street2" style="font-size:1.1em;width:100%">
+						</div>
+						<div style="width:90%;padding-left:10px;padding-bottom:10px">
+							<input id="cityCode" data-bind="value: cityCode" >
+							<script>
+								$(document).ready(function () {
+									$("#cityCode").kendoDropDownList({
+										autoBind: false,
+										valuePrimitive: false,
+										dataValueField: "code",
+										dataTextField: "description",
+	                                    optionLabel: "City",
+										dataSource: app.cities,
+										index: 1
+									});
+								});
+							</script>
+						</div>
+					</div>
+					<div style="width:90%;padding-left:10px;padding-bottom:10px">
+						<input id="provCode" data-bind="value: provCode" placeholder="Province">
+						<script>
+							$(document).ready(function () {
+								$("#provCode").kendoDropDownList({
+									autoBind: false,
+									valuePrimitive: false,
+									dataValueField: "code",
+									dataTextField: "description",
+									dataSource: app.provinces,
+									index: 1,
+									change: function () {
+										var dropdownlist = $("#provCode").data("kendoDropDownList");
+										var dataItem = dropdownlist.dataItem();
 
-                                            if (dataItem.label == "BC") { // If BC set other insurer to MSP if not already set
-                                                var ilist = $('#patientInsurer').data("kendoDropDownList");
-                                                if (ilist.select() == "") {
-                                                    ilist.search("MSP");
-                                                }
-                                            } else {
-                                                var ilist = $('#patientInsurer').data("kendoDropDownList");
-                                                //get rid of MSP if set
-                                                if (ilist.dataItem(ilist.selectedIndex).description == "MSP") {
-                                                    ilist.select(0);
-                                                }
+										if (dataItem.label == "BC") { // If BC set other insurer to MSP if not already set
+											var ilist = $('#patientInsurer').data("kendoDropDownList");
+											if (ilist.select() == "") {
+												ilist.search("MSP");
+											}
+										} else {
+											var ilist = $('#patientInsurer').data("kendoDropDownList");
+											//get rid of MSP if set
+											if (ilist.dataItem(ilist.selectedIndex).description == "MSP") {
+												ilist.select(0);
+											}
 
-                                            }
-                                        }
-                                    });
-                                });
-                            </script>
-                        </div>
-                        <div>
-                        	<div style="width:90%;padding-left:10px;padding-bottom:10px;padding-right:20px;float:left">
-								<input id="phn" name="phn" data-bind="value:phn" placeholder="PHN" />
-								<script>
-									$(document).ready(function () {
-										$("#phn").kendoNumericTextBox({
-											format: "#############",
-											spinners: false,
-											decimals: 0,
-											optionLabel: "PHN",
-											autoBind: false,
-											change: function () {
-												numb = this.value();
-												if ((numb != null) && (numb.toString().length == 10)) {
-													if (checkPHN(this.value()) == 1) {
-														app.findPHN();
-														var dropdownlist = $("#patientInsurer").data("kendoDropDownList");
-														var dataItem = dropdownlist.dataItem();
+										}
+									}
+								});
+							});
+						</script>
+					</div>
+					<div>
+						<div style="width:90%;padding-left:10px;padding-bottom:10px;padding-right:20px;float:left">
+							<input id="phn" name="phn" data-bind="value:phn" placeholder="PHN" />
+							<script>
+								$(document).ready(function () {
+									$("#phn").kendoNumericTextBox({
+										format: "#############",
+										spinners: false,
+										decimals: 0,
+										optionLabel: "PHN",
+										autoBind: false,
+										change: function () {
+											numb = this.value();
+											if ((numb != null) && (numb.toString().length == 10)) {
+												if (checkPHN(this.value()) == 1) {
+													app.findPHN();
+													var dropdownlist = $("#patientInsurer").data("kendoDropDownList");
+													var dataItem = dropdownlist.dataItem();
 
-														if (dataItem.description == "MSP") { // If BC set phn
-															encounterView.set("ihn", this.value());
-														}
+													if (dataItem.description == "MSP") { // If BC set phn
+														encounterView.set("ihn", this.value());
 													}
 												}
 											}
-										});
+										}
 									});
-								</script>
-							</div>
+								});
+							</script>
+						</div>
 
-                            <div id="mic" onClick="app.speech();">
-                                <img src="components/images/mic.png" width=24px height=24px>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="updenc">
-                        <div id="updprov" class="k-input k-textbox" style="width:90%;padding-left:10px;padding-bottom:10px;font-size:1.0em;">
-                            <input id="updprovtext" type="text" style="font-size:1.1em; width:100%" readonly>
-                        </div>
-                        <div id="updphn" class="k-input k-textbox" style="width:90%;padding-left:10px;padding-bottom:10px;font-size:1.0em;">
-                            <input id="updphntext" type="text" style="font-size:1.1em;width:100%" readonly>
-                        </div>
-                    </div>
+						<div id="mic" onClick="app.speech();">
+							<img src="components/images/mic.png" width=24px height=24px>
+						</div>
+					</div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         <input type="text" id="lastname" name="lastname" class="k-textbox" data-bind="value: lastname" placeholder="Last name" style="font-size:1.1em;width:100%">
                     </div>
@@ -285,7 +299,27 @@
                                     autoBind: false,
                                     valuePrimitive: false,
                                     index: 0,
-                                    optionLabel: "Other Insurer"
+                                    optionLabel: "Other Insurer",
+                                    change: function() {
+										var dropdownlist = $("#patientInsurer").data("kendoDropDownList");
+										var dataItem = dropdownlist.dataItem();
+										if (dataItem.reciprocal == "true") {
+											$('#addr').fadeIn("fast");
+											var provList = $("#provCode").data("kendoDropDownList");
+											provList.select(function(provItem) {
+												return provItem.label === dataItem.description;
+											});
+										}
+										else {
+											$('#addr').fadeOut("fast");
+											if (dataItem.description == "MSP") {
+												var provList = $("#provCode").data("kendoDropDownList");
+												provList.select(function(provItem) {
+													return provItem.label === "BC";
+												});
+											}
+										}
+                                    }
                                 });
                             });
                         </script>
@@ -327,6 +361,13 @@
                                             alert("That is not a valid procedure code");
                                         } else {
                                             window.encounterView.set("procId", view[0].code);
+                                            if (view[0].toDay == true) {
+                                                $('#toDayDiv').fadeIn("fast");
+                                            }
+                                            else {
+                                            	$('#toDayDiv').fadeOut("fast");
+										        window.encounterView.set("toDay", "");
+                                            }
                                             app.localProcs.filter({});
                                         }
                                     }
@@ -360,11 +401,8 @@
                         </button>
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
-                        Start
-                        <button data-role="button" data-bind="click: start">
-                            <span class="k-icon k-i-clock"></span>
-                        </button>
-                        <input id="encStartTime" data-bind="value:startTime" />
+                        Service Date
+                        <input id="serviceDate" data-bind="value:serviceDate" />
                         <script>
                             var onChange = function (e) {
                                 var time = new Date(e.sender.value());
@@ -377,12 +415,34 @@
                                 }
                                 $('#toDay').data('kendoDatePicker').max(new Date(year, month, 0));
                                 isHoliday(e.sender.value());
-                                allowCallback(new Date(e.sender.value()));
                             };
                             $(function () {
-                                $("#encStartTime").kendoDateTimePicker({
+                                $("#serviceDate").kendoDatePicker({
                                     animation: false,
-                                    format: "MM/dd/yyyy HH:mm",
+                                    format: "MM/dd/yyyy",
+                                    autoBind: false,
+                                    change: onChange
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div style="width:90%;padding-left:10px;padding-bottom:10px">
+                        Start
+                        <button data-role="button" data-bind="click: start">
+                            <span class="k-icon k-i-clock"></span>
+                        </button>
+                        <input id="encStartTime" data-bind="value:startTime" />
+                        <script>
+                            var onChange = function (e) {
+                                var sdate = $('#serviceDate').data('kendoDatePicker').value();
+                                var stime = $('#encStartTime').data('kendoTimePicker').value();
+                                var date = new Date(sdate.getFullYear(),sdate.getMonth(),sdate.getDay(), stime.getHours(), stime.getMinutes());
+                                allowCallback(date);
+                            };
+                            $(function () {
+                                $("#encStartTime").kendoTimePicker({
+                                    animation: false,
+                                    format: "HH:mm",
                                     autoBind: false,
                                     change: onChange
                                 });
@@ -397,16 +457,17 @@
                         <input id="encStopTime" data-bind="value:stopTime" />
                         <script>
                             $(function () {
-                                $("#encStopTime").kendoDateTimePicker({
+                                $("#encStopTime").kendoTimePicker({
                                     animation: false,
-                                    format: "MM/dd/yyyy HH:mm",
+                                    format: "HH:mm",
                                     autoBind: false
                                 });
                             });
                         </script>
                     </div>
                     <div id="toDayDiv" style="padding-left:10px;padding-bottom:10px;width:90%;display:none">
-                        <input type="text" id="toDay" data-bind="value: toDay" placeholder="To day" style="font-size:1.0em;width:100%">
+                        To Day
+                        <input type="text" id="toDay" data-bind="value: toDay">
                         <script>
                             $(document).ready(function () {
                                 $("#toDay").kendoDatePicker({
@@ -424,9 +485,21 @@
                             <span class="k-icon k-i-search"></span>
                         </button>
                     </div>
-                    <div id="callbackDiv" style="width:90%;padding-left:10px;padding-bottom:10px;display:none">
+                    <div id="callbackDiv" style="width:90%;padding-left:10px;padding-bottom:10px">
                         Callback
-                        <input type="checkbox" data-bind="checked: callback">
+                        <button data-role="button" data-bind="click: calledtime">
+                            <span class="k-icon k-i-clock"></span>
+                        </button>
+                        <input id="callback" data-bind="value:callback" />
+                        <script>
+                            $(function () {
+                                $("#callback").kendoTimePicker({
+                                    animation: false,
+                                    format: "HH:mm",
+                                    autoBind: false
+                                });
+                            });
+                        </script>
                     </div>
                     <div style="width:90%;padding-left:10px;padding-bottom:10px">
                         <textarea id="notes" rows=4 cols=30 data-bind="value: notes" data-option-label="Notes"></textarea>

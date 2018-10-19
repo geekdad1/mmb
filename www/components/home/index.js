@@ -134,6 +134,10 @@
                     return;
                 }
             }
+            if ((this.serviceDate == "") || (this.serviceDate == null)) {
+            	alert("Service date is required");
+            	return;
+            }
             if ((this.startTime == "") || (this.startTime == null)) {
                 alert("Start time is required");
                 return;
@@ -202,8 +206,6 @@
             	return;
             }
             if (app.curEvent == 0) {
-            	alert("Gender = " + this.gender);
-            	alert("DOB = " + this.dateOfBirth);
                 app.encounterData.add({
                     firstname: this.firstname,
                     lastname: this.lastname,
@@ -221,6 +223,10 @@
                     diseaseId: this.diseaseId,
                     locationCode: this.locationCode.code,
                     provCode: this.provCode.code,
+                    street1: this.street1,
+                    street2: this.street2,
+                    cityCode: this.cityCode,
+                    serviceDate: this.serviceDate,
                     startTime: this.startTime,
                     stopTime: this.stopTime,
                     type: "paid",
@@ -229,10 +235,6 @@
                     toDay: this.toDay,
                     callback: this.callback,
                     referralId: this.referralId,
-                    street1: this.street1,
-                    street2: this.street2,
-                    city: this.city,
-                    phone: this.phone,
                     serviceCode: app.clinicDocs.get(this.clinicDoctorId).serviceCode,
                     subFacility: app.clinicDocs.get(this.clinicDoctorId).subFacility,
                     scc: app.clinicDocs.get(this.clinicDoctorId).scc,
@@ -263,9 +265,12 @@
                 app.encounterData.at(0).set("lastname", this.lastname);
                 app.encounterData.at(0).set("firstname", this.firstname);
                 app.encounterData.at(0).set("initials", this.initials);
+                app.encounterData.at(0).set("street1", this.street1);
+                app.encounterData.at(0).set("street2", this.street2);
+                app.encounterData.at(0).set("cityCode", this.cityCode.code);
                 app.encounterData.at(0).set("provCode", this.provCode.code);
                 app.encounterData.at(0).set("phn", this.phn);
-                app.encounterData.at(0).set("gender", this.gender.code);
+                app.encounterData.at(0).set("gender", this.gender);
                 app.encounterData.at(0).set("insurerCode", this.insurerCode.code);
                 app.encounterData.at(0).set("procCode", this.procCode);
                 app.encounterData.at(0).set("procId", this.procId);
@@ -274,19 +279,39 @@
                 app.encounterData.at(0).set("ihn", this.ihn);
                 app.encounterData.at(0).set("clinicDoctor", this.clinicDoctor);
                 app.encounterData.at(0).set("clinicDoctorId", this.clinicDoctorId);
-                app.encounterData.at(0).set("startTime", this.startTime);
-                app.encounterData.at(0).set("stopTime", this.stopTime);
-                app.encounterData.at(0).set("dateOfBirth", this.dateOfBirth);
+                app.encounterData.at(0).set("serviceDate", this.serviceDate);
+                if (this.startTime.length <= 5) {     //This can be a date format or just a number
+                	app.encounterData.at(0).set("startTime",this.startTime);
+                }
+                else {
+	                app.encounterData.at(0).set("startTime", this.startTime.getHours() + ":" + this.startTime.getMinutes());
+                }
+                if (this.stopTime.length <= 5) {     //This can be a date format or just a number
+                	app.encounterData.at(0).set("stopTime",this.stopTime);
+                }
+                else {
+	                app.encounterData.at(0).set("stopTime", this.stopTime.getHours() + ":" + this.stopTime.getMinutes());
+                }
+               	if (this.dateOfBirth.length <= 10) {
+               		app.encounterData.at(0).set("dateOfBirth",this.dateOfBirth);
+                }
+                else {
+                	app.encounterData.at(0).set("dateOfBirth", this.dateOfBirth.getMonth() + "/" + this.dateOfBirth.getDay() + "/" + this.dateOfBirth.getFullYear());
+                }
                 app.encounterData.at(0).set("locationCode", this.locationCode.code);
                 app.encounterData.at(0).set("notes", this.notes);
                 app.encounterData.at(0).set("patientId", this.patientId);
                 app.encounterData.at(0).set("toDay", this.toDay);
-                app.encounterData.at(0).set("callback", this.callback);
+                if (this.callback.length <= 5) {     //This can be a date format or just a number
+                	app.encounterData.at(0).set("callback",this.callback);
+                }
+                else {
+	                app.encounterData.at(0).set("callback", this.callback.getHours() + ":" + this.callback.getMinutes());
+                }
                 app.encounterData.at(0).set("referralId", this.referralId);
                 app.encounterData.at(0).set("street1",this.street1);
-                app.encounterData.at(0).set("street2",this.street1);
-                app.encounterData.at(0).set("city",this.city);
-                app.encounterData.at(0).set("phone",this.phone);
+                app.encounterData.at(0).set("street2",this.street2);
+                app.encounterData.at(0).set("cityCode",this.cityCode.code);
                 app.encounterData.at(0).set("qty1",this.qty1);
                 app.encounterData.at(0).set("serviceId1",this.serviceId1);
                 app.encounterData.at(0).set("serviceCode",app.clinicDocs.get(this.clinicDoctorId).serviceCode);
@@ -392,23 +417,18 @@
         },
         start: function () {
             var time = new Date();
-            var disp = (time.getMonth() + 1) + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes();
+            var disp = (time.getHours() + ":" + time.getMinutes());
             this.set('startTime', disp);
-            $('#toDay').data('kendoDatePicker').min(new Date(time.getFullYear(), time.getMonth(), 1));
-            var month = time.getMonth() + 1;
-            var year = time.getFullYear();
-            if (month == 12) {
-                month = 0;
-                year = year + 1;
-            }
-            $('#toDay').data('kendoDatePicker').max(new Date(year, month, 0));
-            isHoliday($('#encStartTime').data('kendoDateTimePicker').value());
-            allowCallback(new Date($('#encStartTime').data('kendoDateTimePicker').value()));
         },
         stop: function () {
             var time = new Date();
-            var disp = (time.getMonth() + 1) + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes();
+            var disp = (time.getHours() + ":" + time.getMinutes());
             this.set('stopTime', disp);
+        },
+        calledtime: function () {
+            var time = new Date();
+            var disp = (time.getHours() + ":" + time.getMinutes());
+            this.set('callback', disp);
         },
         setProcCode: function (item) {
             this.set('procCode', item.label);
@@ -431,8 +451,12 @@
             app.filterZ();
             app.clinicDoctor = item.label; //save this as the current favourite
             app.clinicDoctorId = item.id;
-            if ($('#encStartTime').data('kendoDateTimePicker').value() != null) {
-            	allowCallback(new Date($('#encStartTime').data('kendoDateTimePicker').value()));
+            if (($('#encStartTime').data('kendoTimePicker').value() != null) &&
+                ($('#serviceDate').data('kendoDatePicker').value() != null)) {
+                var sDate = new Date($('#serviceDate').data('kendoDatePicker').value());
+                sDate.setHours($('#encStartTime').data('kendoTimePicker').value().getHours());
+                sDate.setMinutes($('#encStartTime').data('kendoTimePicker').value().getMinutes());
+            	allowCallback(sDate);
             }
             if (item.location > 0) {
                 window.encounterView.set("locationCode", app.locations.get(item.location));
@@ -450,13 +474,14 @@
         setToDay: function (date) {
             var time = new Date(date);
             var disp = (time.getMonth() + 1) + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes();
-            $('#toDay').data('kendoDatePicker').min(new Date(time.getFullYear(), time.getMonth(), 1));
-            var month = time.getMonth() + 1;
+            $('#toDay').data('kendoDatePicker').min(new Date(time.getFullYear(), time.getMonth(), time.getDate()));
+            var month = time.getMonth() + 2;
             var year = time.getFullYear();
-            if (month == 12) {
-                month = 0;
+            if (month >= 12) {
+                month = month - 12;
                 year = year + 1;
             }
+            //day 0 is before the first day of the next month, which cuts things off at the end of this month
             $('#toDay').data('kendoDatePicker').max(new Date(year, month, 0));
 
         },
@@ -586,10 +611,11 @@
             var item = e.data;
             window.encounterView.setProcCode(item);
             if (item.toDay) {
-                if (($('#encStartTime').data('kendoDateTimePicker').value() != "") &&
-                    ($('#encStartTime').data('kendoDateTimePicker').value() != null)) {
-                    var time = new Date($('#encStartTime').data('kendoDateTimePicker').value());
-                    $('#toDay').data('kendoDatePicker').min(new Date(time.getFullYear(), time.getMonth(), 1));
+                if (($('#serviceDate').data('kendoDatePicker').value() != "") &&
+                    ($('#serviceDate').data('kendoDatePicker').value() != null)) {
+                    var time = new Date($('#serviceDate').data('kendoDatePicker').value());
+                    $('#toDay').data('kendoDatePicker').min(time);
+//                    $('#toDay').data('kendoDatePicker').min(new Date(time.getFullYear(), time.getMonth(), 1));
                     var month = time.getMonth() + 1;
                     var year = time.getFullYear();
                     if (month == 12) {
@@ -730,6 +756,11 @@
     window.provinceView = kendo.observable({
         selectedProvince: null,
         dataSource: app.provinces
+    });
+
+    window.cityView = kendo.observable({
+        selectedCity: null,
+        dataSource: app.cities
     });
 
     window.locationView = kendo.observable({
