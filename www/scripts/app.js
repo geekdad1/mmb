@@ -630,6 +630,7 @@
         },
         requestEnd: function (e) {
 		alert(e.sender.options.transport.read.url);
+		alert(e.response);
             if (e.response === undefined) {
                 return;
             }
