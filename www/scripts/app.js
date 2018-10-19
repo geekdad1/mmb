@@ -629,6 +629,7 @@
             $('#progressbar').fadeOut("fast");
         },
         requestEnd: function (e) {
+		alert(e.toString());
             if (e.response === undefined) {
                 return;
             }
