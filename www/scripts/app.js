@@ -629,7 +629,7 @@
             $('#progressbar').fadeOut("fast");
         },
         requestEnd: function (e) {
-		alert(e.toString());
+		alert(e.sender.options.transport.read.url);
             if (e.response === undefined) {
                 return;
             }
