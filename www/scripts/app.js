@@ -4,37 +4,9 @@
     var app = {
         data: {}
     };
-    var cord = {
-	    // Application Constructor
-	    initialize: function() {
-alert("adding event listener");
-		    
-		    document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-	    },
-
-	    // deviceready Event Handler
-    	//
-    	// Bind any cordova events here. Common events are:
-    	// 'pause', 'resume', etc.
-    	onDeviceReady: function() {
-alert("device ready");
-		this.receivedEvent('deviceready');
-	        bootstrap();
-            
-		},
-
-    	// Update DOM on a Received Event
-    	receivedEvent: function(id) {
-        	var parentElement = document.getElementById(id);
-        	var listeningElement = parentElement.querySelector('.listening');
-        	var receivedElement = parentElement.querySelector('.received');
-        	console.log('Received Event: ' + id);
-    	}
-	};
 	    
     var bootstrap = function () {
         $(function () {
-alert("running bootstrap");
             app.mobileApp = new kendo.mobile.Application(document.body, {
 
                 // you can change the default transition (slide, zoom or fade)
@@ -47,25 +19,20 @@ alert("running bootstrap");
                 statusBarStyle: 'black-translucent',
                 layout: 'main'
             });
-			alert("speech init ");
-			window.plugins.speechRecognition.isRecognitionAvailable(
-   		 		function(result) { 
-					alert("speech works");
-				}, 
-				function(err) { 
-					alert("speech fails");
-				}
-			);
-			alert("done speech init");
-alert ("bootstrap complete");
+//			alert("speech init disabled");
+//			window.plugins.speechRecognition.isRecognitionAvailable(
+//   		 		function(result) { 
+//					alert("speech works");
+//				}, 
+//				function(err) { 
+//					alert("speech fails");
+//				}
+//			);
         });
     };
-	alert("got here");
-	cord.initialize();
-	bootstrap();
+    bootstrap();
 		
 
-alert("recognize function");
 	app.speech = function recognize() {
 	alert("speech start listening");
 	window.plugins.speechRecognition.startListening(
@@ -76,7 +43,6 @@ alert("recognize function");
     	}, options);
     };
 	
-alert("keep active state");
     app.keepActiveState = function _keepActiveState(item) {
         var currentItem = item;
         $("#navigation-container li a.active").removeClass("active");
@@ -163,12 +129,17 @@ alert("keep active state");
                         return dataItem.label === "BC";
                     });
                     window.encounterView.set("provCode", dropdownlist.dataItem(dropdownlist.selectedIndex));
-                    $('#updprovtext').val(app.provinces.get(window.encounterView.get("provCode").code).description);
                 } else {
-                    $('#updprovtext').val(app.provinces.get(e.response.encounter.provCode).description);
                     window.encounterView.set("provCode", app.provinces.get(e.response.encounter.provCode));
                 }
-                $('#updphntext').val(e.response.encounter.phn);
+                window.encounterView.set("street1", e.response.encounter.street1);
+                window.encounterView.set("street2", e.response.encounter.street2);
+                if (e.response.encounter.cityCode == null) {
+                    dropdownlist = $("#cityCode").data("kendoDropDownList");
+                    window.encounterView.set("cityCode", dropdownlist.dataItem(dropdownlist.selectedIndex));
+                } else {
+                    window.encounterView.set("cityCode", app.cities.get(e.response.encounter.cityCode));
+                }
                 window.encounterView.set("phn", e.response.encounter.phn);
                 window.encounterView.set("lastname", e.response.encounter.lastname);
                 window.encounterView.set("firstname", e.response.encounter.firstname);
@@ -176,6 +147,12 @@ alert("keep active state");
                 window.encounterView.set("dateOfBirth", e.response.encounter.dateOfBirth);
                 window.encounterView.set("gender", app.genders.get(e.response.encounter.gender).code);
                 window.encounterView.set("insurerCode", app.insurers.get(e.response.encounter.insurerCode));
+                if (app.insurers.get(e.response.encounter.insurerCode).reciprocal == "true") {
+                	$('#addr').fadeIn("fast");
+                }
+                else {
+                	$('#addr').fadeOut("fast");
+                }
                 window.encounterView.set("ihn", e.response.encounter.ihn);
                 if (e.response.encounter.procId != "") {
                     window.encounterView.set("procCode", app.procedures.get(e.response.encounter.procId).label);
@@ -185,6 +162,8 @@ alert("keep active state");
                     window.encounterView.set("diseaseCode", app.diseases.get(e.response.encounter.diseaseId).label);
                     window.encounterView.set("diseaseId", e.response.encounter.diseaseId);
                 }
+                window.encounterView.set("serviceDate", e.response.encounter.serviceDate);
+                window.encounterView.setToDay(e.response.encounter.serviceDate);
                 window.encounterView.set("stopTime", e.response.encounter.stopTime);
                 window.encounterView.set("startTime", e.response.encounter.startTime);
                 window.encounterView.set("notes", e.response.encounter.notes);
@@ -319,6 +298,10 @@ alert("keep active state");
                         type: "string",
                         editable: true
                     },
+                    serviceDate: {
+                    	type: "string",
+                    	editable: true
+                    },
                     startTime: {
                         type: "string",
                         editable: true
@@ -362,6 +345,18 @@ alert("keep active state");
                     phn: {
                         type: "number",
                         editable: true
+                    },
+                    street1: {
+                    	type: "string",
+                    	editable: true
+                    },
+                    street2: {
+                    	type: "string",
+                    	editable: true
+                    },
+                    cityCode: {
+                    	type: "string",
+                    	editable: true
                     },
                     provCode: {
                         type: "string",
@@ -580,7 +575,6 @@ alert("keep active state");
             }
         }
     });
-alert ("set variables");
     app.appToken = "";
     app.userKey = "";
     app.source = "";
@@ -658,6 +652,7 @@ alert ("set variables");
                 app.insurers.read();
                 app.genders.read();
                 app.provinces.read();
+                app.cities.read();
                 app.locations.read();
                 app.holidays.read();
                 app.doctors.read();
@@ -838,7 +833,7 @@ alert ("set variables");
             },
             close: function () {
                 this.date = "";
-                this.starttime = ""; ///.......
+                this.startTime = ""; ///.......
             },
         },
         schema: {
@@ -861,6 +856,9 @@ alert ("set variables");
        requestEnd: function (e) {
 	   // Don't want to do this unless we are saving claims
 	   // ignore it for startup or when we are picking up events for a date
+	   if (e.response === undefined) {
+	   	return;
+	   }
            if ($('#progressbar').is(":visible") == false) {
                if (e.response.dates !== undefined) {
 	           if (e.response.dates.length > 0) {
@@ -915,6 +913,7 @@ alert ("set variables");
 	        window.encounterView.set("diseaseCode", "");
 	        window.encounterView.set("diseaseId",0);
         }
+        window.encounterView.set("serviceDate", "");
         window.encounterView.set("stopTime", "");
         window.encounterView.set("startTime", "");
         window.encounterView.set("notes", "");
@@ -927,16 +926,15 @@ alert ("set variables");
         }
         window.encounterView.set("procId", 0);
         window.encounterView.set("toDay", "");
-        window.encounterView.set("callback", false);
+        window.encounterView.set("callback", "");
         window.encounterView.set("referral", "");
         window.encounterView.set("referralId", 0);
         window.encounterView.set("street1","");
         window.encounterView.set("street2","");
         window.encounterView.set("city","");
-        window.encounterView.set("phone","");
+//        window.encounterView.set("phone","");
         window.location.href = "#encounter";
-        $("#addenc").fadeIn("fast");
-        $("#updenc").fadeOut("fast");
+        $('#addr').fadeOut("fast");
     };
     app.submitMinus = function () {
         app.curEvent = 0;
@@ -959,7 +957,9 @@ alert ("set variables");
     app.findPHN = function () {
         app.phnData.read();
     };
-
+    app.logoff = function() {
+        app.mobileApp.navigate("#login");
+    };
     app.filterFav = function () {
         if (app.lookup == "procedure") {
             if (app.localProcs.filter() === undefined) {
@@ -1813,6 +1813,10 @@ alert ("set variables");
                     },
                     description: {
                         editable: false
+                    },
+                    reciprocal: {
+                    	type: "string",
+                    	editable: false
                     }
                 }
             }
@@ -1912,6 +1916,56 @@ alert ("set variables");
                         editable: false
                     },
                     description: {
+                        editable: false
+                    },
+                    label: {
+                        editable: false
+                    }
+                }
+            }
+        },
+        error: function (e) {
+            checkError(e);
+        },
+        requestEnd: function (e) {
+            if (e.response === undefined) {
+                return;
+            }
+            if (e.response.state == "ERROR") {
+                return;
+            }
+            if (e.type == "read") {
+                var pb = $("#progressbar").data("kendoProgressBar");
+                var cur = pb.value() + 1;
+                pb.value(cur);
+            }
+        }
+    });
+
+    app.cities = new kendo.data.DataSource({
+        transport: {
+            read: {
+                url: "https://mmb.medinet.ca/cgi-bin/json_cities.cgi",
+                dataType: "json",
+                type: "post",
+                data: {
+                    token: function () {
+                        return app.appToken;
+                    },
+                    userKey: function () {
+                        return app.userKey;
+                    }
+                }
+            }
+        },
+        schema: {
+            data: "codes",
+            dataType: "json",
+            model: {
+                id: "code",
+                hasChildren: false,
+                fields: {
+                    code: {
                         editable: false
                     },
                     label: {
@@ -2174,18 +2228,24 @@ function allowCallback(time) {
                 $('#callbackDiv').fadeIn('fast');
             } else {
                 $('#callbackDiv').fadeOut('fast');
+                $('#callback').data('kendoTimePicker').value("");
             }
         } else {
             $('#callbackDiv').fadeOut('fast');
+            $('#callback').data('kendoTimePicker').value("");
         }
     } else {
         $('#callbackDiv').fadeOut('fast');
+        $('#callback').data('kendoTimePicker').value("");
     }
 }
 
 function checkError(e) {
     if (e.errorThrown != "custom error") {
         var message = "Error Returned from server: " + e.errorThrown;
+    	if (e.errorThrown == "Bad Gateway") {
+    		message = "Program Error.  Please contact Medinet for support";
+    	}
         alert(message);
     } else {
         if (e.errors == "not registered") {
@@ -2200,6 +2260,8 @@ function checkError(e) {
         } else if (e.errors == "not logged in") {
             alert("Please log in again");
             app.mobileApp.navigate("#login");
+        } else if (e.errorThrown == "bad gateway") {
+            alert("Program error.  Please contact Medinet for support");
         } else {
             alert(e.errors);
         }
