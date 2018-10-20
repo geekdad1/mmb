@@ -589,7 +589,7 @@
     app.appTokenData = new kendo.data.DataSource({
         transport: {
             read: {
-                url: "https://mmb.medinet.ca/cgi-bin/json_login.cgi",
+                url: "https://209.217.83.54/cgi-bin/json_login.cgi",
                 dataType: "json",
                 type: "post"
             },
