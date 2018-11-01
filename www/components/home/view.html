@@ -20,7 +20,7 @@
         <script>
             $("#progressbar").kendoProgressBar({
                 min: 0,
-                max: 13,
+                max: 12,
                 value: 0,
                 showStatus: false,
                 complete: function () {
@@ -196,7 +196,7 @@
 
 										if (dataItem.label == "BC") { // If BC set other insurer to MSP if not already set
 											var ilist = $('#patientInsurer').data("kendoDropDownList");
-											if (ilist.select() == "") {
+											if (ilist.select() == 0) {
 												ilist.search("MSP");
 											}
 										} else {
