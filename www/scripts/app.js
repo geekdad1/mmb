@@ -625,12 +625,11 @@
             }
         },
         error: function (e) {
-alert("Running check error for appTokenData");            
-		checkError(e);
+            checkError(e);
             $('#progressbar').fadeOut("fast");
         },
         requestEnd: function (e) {
-//		alert(e.sender.options.transport.read.url);
+        //alert(e.sender.options.transport.read.url);
             if (e.response === undefined) {
                 return;
             }
@@ -895,7 +894,7 @@ alert("Running check error for appTokenData");
         }
         var dropdownlist = $("#provCode").data("kendoDropDownList");
         dropdownlist.selectedIndex = 1;
-        window.encounterView.set("provCode", dropdownlist.dataItem(dropdownlist.selectedIndex));
+        window.encounterView.set("provCode", dropdownlist.dataItem(dropdownlist.selectedIndex).code);
         window.encounterView.set("phn", "");
         window.encounterView.set("lastname", "");
         window.encounterView.set("firstname", "");
@@ -1260,6 +1259,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Procedures " + cur);
             }
         }
     });
@@ -1373,6 +1373,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Fee codes " + cur);
             }
         }
     });
@@ -1467,6 +1468,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("activityTypes " + cur);
             }
         }
     });
@@ -1564,7 +1566,8 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
-            }
+                console.log("Diseases " + cur);
+           }
         }
 
     });
@@ -1783,6 +1786,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Clinic Docs " + cur);
             }
         }
     });
@@ -1837,6 +1841,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Insurers " + cur);
             }
         }
     });
@@ -1887,6 +1892,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Genders " + cur);
             }
         }
     });
@@ -1940,6 +1946,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Provinces " + cur);
             }
         }
     });
@@ -1990,6 +1997,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Cities " + cur);
             }
         }
     });
@@ -2040,6 +2048,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("locations " + cur);
             }
         }
     });
@@ -2087,6 +2096,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Holidays " + cur);
             }
         }
     });
@@ -2190,6 +2200,7 @@ alert("Running check error for appTokenData");
                 var pb = $("#progressbar").data("kendoProgressBar");
                 var cur = pb.value() + 1;
                 pb.value(cur);
+                console.log("Doctors " + cur);
             }
         }
     });
@@ -2265,7 +2276,6 @@ function checkError(e) {
         } else if (e.errorThrown == "bad gateway") {
             alert("Program error.  Please contact Medinet for support");
         } else {
-alert(e.errorThrown);
             alert(e.errors);
         }
     }
