@@ -8,24 +8,23 @@
     <link href="kendo/styles/kendo.common.min.css" rel="stylesheet" />
     <!-- Default Kendo UI theme CSS for web and dataviz widgets -->
     <link href="kendo/styles/kendo.default.min.css" rel="stylesheet" />
-    <link href="kendo/styles/kendo.default.mobile.min.css" rel="stylesheet" />
-    <!-- (optional) Kendo UI Mobile CSS, include only if you will use the mobile devices features -->
-    <link href="kendo/styles/kendo.default.mobile.all.min.css" rel="stylesheet" type="text/css" />
+    <link href="kendo/styles/kendo.default.mobile.min.css" rel="stylesheet" type="text/css" />
+    <link href="kendo/styles/kendo.flat.min.css" rel="stylesheet" type="text/css" />
     <link href="components/css/mmb.css" rel="stylesheet" />
     <script src="kendo/js/jquery.min.js"></script>
-    <script src="kendo/js/kendo.all.min.js"></script>
-    <script src="kendo/js/kendo.mobile.min.js"></script>
-    <script src="kendo/js/kendo.progressbar.min.js"></script>
+    <!-- script src="kendo/js/kendo.all.min.js"></script -->
+    <!-- script src="kendo/js/kendo.mobile.min.js"></script -->
+    <script src="kendo/js/kendo.custom.min.js"></script>
     <script src="scripts/app.js"></script>
     <script src="java/checkPHN.js"></script>
 </head>
 
-<body id="kendoUiMobileApp">
+<body id="kendoUiMobileApp" onContextMenu='return false'>
     <script src="components/home/index.js"></script>
     <div data-role="layout" data-id="login">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title">Medinet</span>
             </div>
         </header>
@@ -40,7 +39,7 @@
     <div data-role="layout" data-id="register">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title">Medinet</span>
             </div>
         </header>
@@ -55,7 +54,7 @@
     <div data-role="layout" data-id="resetpw">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title">Medinet</span>
             </div>
         </header>
@@ -70,7 +69,7 @@
     <div data-role="layout" data-id="main">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title">Medinet</span>
             </div>
         </header>
@@ -83,7 +82,7 @@
     <div data-role="layout" data-id="main-nonav">
         <header data-role="header">
             <div data-role="navbar">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -94,7 +93,7 @@
     <div data-role="layout" data-id="calendarLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color: #023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -119,7 +118,7 @@
     <div data-role="layout" data-id="splashLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color: #023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title">Medinet Mobile Billing</span>
             </div>
         </header>
@@ -144,7 +143,7 @@
     <div data-role="layout" data-id="encounterLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -158,7 +157,7 @@
     <div data-role="layout" data-id="activityLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -172,7 +171,7 @@
     <div data-role="layout" data-id="procSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -188,7 +187,7 @@
     <div data-role="layout" data-id="disSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -204,7 +203,7 @@
     <div data-role="layout" data-id="docSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -220,7 +219,7 @@
     <div data-role="layout" data-id="feeCodeSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -236,7 +235,7 @@
     <div data-role="layout" data-id="actSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
@@ -252,7 +251,7 @@
     <div data-role="layout" data-id="refSearchLayout">
         <header data-role="header">
             <div data-role="navbar" style="background-color:#023A60;color:white">
-                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico"width=32 height=32></div>
+                <div style="float:left;padding-top:8px;padding-left:8px"><img src="components/images/logo.ico" width=32 height=32></div>
                 <span data-role="view-title"></span>
             </div>
         </header>
