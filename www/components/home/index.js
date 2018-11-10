@@ -492,8 +492,8 @@
  	    this.set(key,item.id);
         },
         cancel: function() {
-            var tabToActivate = $("#demogTab");			//reset the tab before we leave the form
-            $("#tabstrip").data("kendoTabStrip").activateTab(tabToActivate);
+           //dp var tabToActivate = $("#demogTab");			//reset the tab before we leave the form
+           //dp $("#tabstrip").data("kendoTabStrip").activateTab(tabToActivate);
             //$('#tabstrip').kendoTabStrip().
 	    if (app.calendarData._data.length > 0) {
 	    	var treeview = $("#mainCalendar").data("kendoTreeView")
